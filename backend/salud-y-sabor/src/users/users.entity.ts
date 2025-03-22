@@ -5,10 +5,6 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-/**
- *  Enums de Usuario
- */
-
 export enum DocumentType {
   CC = 'CC',
   CE = 'CE',
@@ -27,43 +23,30 @@ export enum Status {
 
 export enum Disease {
   DIABETES = 'Diabetes',
+  NINGUNA = 'Ninguna',
 }
 
-/**
- * Entidad que representa a los usuarios en el sistema.
- */
 @Entity({ name: 'users' })
 export class User {
-  /**
-   * Identificador único del usuario.
-   */
+
   @PrimaryGeneratedColumn()
   id: number;
 
-  /**
-   * Nombre del usuario.
-   */
   @Column()
   fullname: string;
 
   @Column({ type: 'enum', enum: DocumentType })
   documentType: DocumentType;
 
-  @Column()
+  @Column({ unique: true })
   document: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  /**
-   * Nombre de usuario único para autenticación.
-   */
   @Column({ unique: true })
   username: string;
 
-  /**
-   * Contraseña del usuario.
-   */
   @Column()
   password: string;
 
@@ -73,15 +56,27 @@ export class User {
   @Column('decimal', { precision: 6, scale: 2 })
   Weight: number;
 
-  @Column({ type: 'enum', enum: Disease })
+  @Column({
+    type: 'enum', 
+    enum: Disease, 
+    default: Disease.NINGUNA,
+  })
   disease: Disease;
 
-  @Column({ type: 'enum', enum: Role })
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.ROLE_USER,
+  })
   role: Role;
 
-  @Column({ type: 'enum', enum: Status })
+  @Column({
+    type: 'enum', 
+    enum: Status, 
+    default: Status.ACTIVE,
+  })
   status: Status;
-  
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
