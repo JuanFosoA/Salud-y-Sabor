@@ -61,7 +61,6 @@ export class User {
   @Column({
     type: 'enum', 
     enum: Disease, 
-    default: Disease.NINGUNA,
   })
   disease: Disease;
 

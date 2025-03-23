@@ -7,7 +7,7 @@ import {
   IsNumber, 
   IsPositive 
 } from 'class-validator';
-import { Transform } from 'class-transformer'; // ✅ Importación necesaria
+import { Transform } from 'class-transformer';
 import { DocumentType, Disease } from "src/users/users.entity";
 
 export class SignupDto {
@@ -24,7 +24,7 @@ export class SignupDto {
   @Matches(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, {
       message: "Email must contain '@' and a valid domain",
   })
-  @Transform(({ value }) => value.toLowerCase()) // ✅ Convierte email a minúsculas
+  @Transform(({ value }) => value.toLowerCase())
   email: string;
 
   @IsString()
