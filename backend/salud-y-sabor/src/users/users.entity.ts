@@ -3,6 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  BeforeInsert,
+  BeforeUpdate
 } from 'typeorm';
 
 export enum DocumentType {
@@ -89,4 +91,11 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  normalizeEmail() {
+    this.email = this.email.toLowerCase().trim();
+  }
+
 }
