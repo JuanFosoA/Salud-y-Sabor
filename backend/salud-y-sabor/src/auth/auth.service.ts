@@ -1,15 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { User, Role, Status, DocumentType, Disease } from 'src/users/users.entity';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { User, Disease } from 'src/users/users.entity';
 import { SignupDto } from './dto/signup.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { SigninDto } from './dto/signin.dto';
 import { UsersService } from 'src/users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async signup(signupData: SignupDto): Promise<User> {
     const email = signupData.email.toLowerCase().trim();
@@ -46,8 +48,29 @@ export class AuthService {
   }
 
 
-  // async signin(credentials: SigninDto){
+  async signin(credentials: SigninDto){
+    const { email, password } = credentials;
 
-  // }
+    const userFound = await this.userService.getUserByEmail(email);
+
+    if (!userFound) {
+      throw new UnauthorizedException('Wrong credentials');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, userFound.password);
+    if (!passwordMatch){
+      throw new UnauthorizedException('Wrong credentials');
+    }
+
+    return this.generateUserTokens(userFound.id)
+  }
+
+  generateUserTokens(userId: number) {
+    const accessToken = this.jwtService.sign({ userId });
+
+    return {
+      accessToken,
+    }
+  }
 
 }
