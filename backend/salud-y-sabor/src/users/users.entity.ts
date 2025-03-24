@@ -56,7 +56,7 @@ export class User {
   height: number;
 
   @Column('decimal', { precision: 6, scale: 2 })
-  Weight: number;
+  weight: number;
 
   @Column({
     type: 'enum', 
