@@ -5,7 +5,9 @@ import { SigninDto } from './dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService
+  ) {}
 
   @Post('signup')
   async signUp(@Body() signupData: SignupDto) {
@@ -15,5 +17,10 @@ export class AuthController {
   @Post('signin')
   async signin(@Body() credentials: SigninDto) {
     return this.authService.signin(credentials);
+  }
+
+  @Post('refresh')
+  async refreshToken(@Body('refreshToken') token: string) {
+    return this.authService.refreshToken(token);
   }
 }
