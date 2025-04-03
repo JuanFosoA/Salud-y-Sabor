@@ -61,16 +61,13 @@ export class AuthService {
     if (!passwordMatch){
       throw new UnauthorizedException('Wrong credentials');
     }
-
-    return this.generateUserTokens(userFound.id)
+    
+    const accessToken = this.generateUserTokens(userFound.id);
+    return { accessToken };
   }
 
   generateUserTokens(userId: number) {
-    const accessToken = this.jwtService.sign({ userId });
-
-    return {
-      accessToken,
-    }
+    return this.jwtService.sign({ userId });
   }
 
 }

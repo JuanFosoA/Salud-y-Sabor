@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { SigninDto } from './dto/signin.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +14,15 @@ export class AuthController {
   }
 
   @Post('signin')
-  async signin(@Body() credentials: SigninDto) {
-    return this.authService.signin(credentials);
+  async signin(
+    @Body() credentials: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken } = await this.authService.signin(credentials);
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    return { message: 'Login succesful'};
   }
+
+  // @Post('logout')
+  // async logout()
 }
