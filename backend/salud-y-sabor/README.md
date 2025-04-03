@@ -1,27 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -41,12 +17,6 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
 ```bash
 # unit tests
 $ npm run test
@@ -56,6 +26,40 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## Create Data Base
+
+```bash
+#Comandos para ejecutar en la consola de postgresql
+-- Crear la base de datos llamada "prueba_db"
+CREATE DATABASE prueba_db;
+
+-- Crear un usuario llamado "user_prueba" con contraseña "password_prueba"
+CREATE USER user_prueba WITH PASSWORD 'password_prueba';
+
+-- Cambiar el propietario de la base de datos "prueba_db" a "user_prueba"
+ALTER DATABASE prueba_db OWNER TO user_prueba;
+
+-- Otorgar todos los privilegios sobre la base de datos "prueba_db" a "user_prueba"
+GRANT ALL PRIVILEGES ON DATABASE prueba_db TO user_prueba;
+
+-- Conceder permisos de conexión a "user_prueba" en la base de datos "prueba_db"
+GRANT CONNECT ON DATABASE prueba_db TO user_prueba;
+
+-- Otorgar todos los privilegios en todas las tablas del esquema "public" a "user_prueba"
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user_prueba;
+
+-- Otorgar todos los privilegios en todas las secuencias del esquema "public" a "user_prueba"
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO user_prueba;
+
+-- Asegurar que los futuros objetos (tablas) creados en el esquema "public" otorguen todos los privilegios a "user_prueba"
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO user_prueba;
+
+-- Asegurar que las futuras secuencias creadas en el esquema "public" otorguen todos los privilegios a "user_prueba"
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO user_prueba;
+
+
 ```
 
 ## Deployment

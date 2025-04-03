@@ -6,7 +6,9 @@ import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService
+  ) {}
 
   @Post('signup')
   async signUp(@Body() signupData: SignupDto) {
@@ -25,4 +27,8 @@ export class AuthController {
 
   // @Post('logout')
   // async logout()
+  @Post('refresh')
+  async refreshToken(@Body('refreshToken') token: string) {
+    return this.authService.refreshToken(token);
+  }
 }

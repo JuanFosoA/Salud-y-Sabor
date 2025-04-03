@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/users.entity';  
 import { UsersModule } from 'src/users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { RefreshTokenModule } from 'src/users/refresh.token.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: '30m' },
     }),
     UsersModule,
+    RefreshTokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
