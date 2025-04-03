@@ -18,6 +18,13 @@ export class UsersService {
     return userFound;
   }
 
+  async getUserById(id: number) {
+    const userFound = await this.userRepository.findOne({
+      where: { id },
+    });
+    return userFound;
+  }
+
   async getUserByUsername(username: string) {
     const userFound = await this.userRepository.findOne({
       where: { username },

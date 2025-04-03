@@ -6,9 +6,7 @@ import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   async signUp(@Body() signupData: SignupDto) {
@@ -22,7 +20,7 @@ export class AuthController {
   ) {
     const { accessToken } = await this.authService.signin(credentials);
     res.setHeader('Authorization', `Bearer ${accessToken}`);
-    return { message: 'Login succesful'};
+    return { message: 'Login succesful' };
   }
 
   // @Post('logout')
