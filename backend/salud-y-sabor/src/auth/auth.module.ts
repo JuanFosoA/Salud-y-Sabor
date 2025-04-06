@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
@@ -16,7 +16,7 @@ import { RefreshTokenModule } from 'src/users/refresh.token.module';
       secret: process.env.SECRET_KEY,
       signOptions: { expiresIn: '30m' },
     }),
-    UsersModule,
+    forwardRef(() => UsersModule), // ✅ Cambiado para evitar la dependencia circular
     RefreshTokenModule,
   ],
   controllers: [AuthController],
