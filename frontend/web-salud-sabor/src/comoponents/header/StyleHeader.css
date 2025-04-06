@@ -1,0 +1,53 @@
+.header {
+    background-color: #f59e0b; 
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .logo {
+    color: white;
+    font-weight: bold;
+  }
+  
+  .logo a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logo-text span {
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .logo-and {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .login-button {
+    background-color: #ecfccb;
+    color: #166534;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .login-button:hover {
+    background-color: #d9f99d; 
+  }
+  
+  
