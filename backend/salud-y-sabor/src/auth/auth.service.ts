@@ -63,11 +63,11 @@ export class AuthService {
       throw new UnauthorizedException('Wrong credentials');
     }
 
-    return this.generateUserTokens(userFound.email);
+    return this.generateUserTokens(userFound.id);
   }
 
-  async generateUserTokens(userId: string) {
-    const user = await this.userService.getUserByEmail(userId);
+  async generateUserTokens(userId: number) {
+    const user = await this.userService.getUserById(userId);
 
     if (!user) {
       throw new UnauthorizedException('User not found');
