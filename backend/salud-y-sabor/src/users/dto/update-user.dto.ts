@@ -2,10 +2,10 @@ import {
   IsOptional,
   IsString,
   IsNumber,
-  Min,
-  Max,
-  IsNotEmpty,
+  IsPositive,
+  IsEnum,
 } from 'class-validator';
+import { Disease } from '../users.entity';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -17,23 +17,16 @@ export class UpdateUserDto {
   username?: string;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  password?: string;
-
-  @IsOptional()
   @IsNumber()
-  @Min(0.5)
-  @Max(2.5)
+  @IsPositive({ message: "Height must be a positive number" })
   height?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(20)
-  @Max(300)
+  @IsPositive({ message: "Weight must be a positive number" })
   weight?: number;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(Disease, { message: "Invalid disease type" })
   disease?: string;
 }

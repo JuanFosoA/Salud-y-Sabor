@@ -1,17 +1,45 @@
-import { Controller, UseGuards, Patch, Body, Request } from '@nestjs/common';
+import { Controller, UseGuards, Patch, Body, Request, Req, Put, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../guards/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('users')
-@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  
   @Patch('profile')
+  @UseGuards(AuthGuard)
   updateProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     return this.usersService.updateUser(userId, updateUserDto);
+  }
+
+  @Patch('change-password')
+  @UseGuards(AuthGuard)
+  async changePassword(
+    @Req() req,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    return this.usersService.changePassword(
+      req.user.id,
+      changePasswordDto.oldPassword,
+      changePasswordDto.newPassword,
+    );
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto){
+    return this.usersService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Put('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto){
+    return this.usersService.resetPassword(
+      resetPasswordDto.newPassword,
+      resetPasswordDto.resetToken,
+    );
   }
 }
