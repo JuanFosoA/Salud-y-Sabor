@@ -1,0 +1,40 @@
+.contenedor-principal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem;
+  font-family: "Arial", sans-serif;
+}
+
+.contenedor-izquierdo {
+  flex: 1;
+  max-width: 50%;
+}
+
+.contenedor-izquierdo h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.contenedor-izquierdo p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.boton-googleplay {
+  height: 60px;
+}
+
+.contenedor-derecho {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.imagen-app {
+  max-width: 200px;
+  height: auto;
+  border-radius: 20px;
+}
