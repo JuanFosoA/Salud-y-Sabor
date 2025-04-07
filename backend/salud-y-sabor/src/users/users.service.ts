@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -40,7 +45,10 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -49,5 +57,12 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
     return this.userRepository.save(user);
+  }
+
+  async incrementTokenVersion(userId: number): Promise<void> {
+    await this.userRepository.update(
+      { id: userId },
+      { tokenVersion: () => 'tokenVersion + 1' },
+    );
   }
 }

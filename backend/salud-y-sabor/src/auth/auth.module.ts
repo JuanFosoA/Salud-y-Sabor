@@ -16,11 +16,11 @@ import { RefreshTokenModule } from 'src/users/refresh.token.module';
       secret: process.env.SECRET_KEY,
       signOptions: { expiresIn: '30m' },
     }),
-    forwardRef(() => UsersModule), // ✅ Cambiado para evitar la dependencia circular
+    forwardRef(() => UsersModule), //Cambiado para evitar la dependencia circular
     RefreshTokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

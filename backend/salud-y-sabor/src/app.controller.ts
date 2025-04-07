@@ -10,7 +10,7 @@ export class AppController {
 
   @Get()
   someProtectedroute(@Req() req) {
-    return { message: 'Accessed Resource', userId: req.userId};
+    return { message: 'Accessed Resource', userId: req.user.id};
   }
 
 }

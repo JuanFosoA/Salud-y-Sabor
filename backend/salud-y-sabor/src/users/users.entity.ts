@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import { RefreshToken } from './refresh.tokens.entity';
 
@@ -32,7 +32,6 @@ export enum Disease {
 
 @Entity({ name: 'users' })
 export class User {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -61,8 +60,8 @@ export class User {
   weight: number;
 
   @Column({
-    type: 'enum', 
-    enum: Disease, 
+    type: 'enum',
+    enum: Disease,
   })
   disease: Disease;
 
@@ -74,8 +73,8 @@ export class User {
   role: Role;
 
   @Column({
-    type: 'enum', 
-    enum: Status, 
+    type: 'enum',
+    enum: Status,
     default: Status.ACTIVE,
   })
   status: Status;
@@ -102,4 +101,6 @@ export class User {
     this.email = this.email.toLowerCase().trim();
   }
 
+  @Column({ default: 0 })
+  tokenVersion: number;
 }

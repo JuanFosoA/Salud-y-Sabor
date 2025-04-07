@@ -51,29 +51,35 @@ export class AuthService {
 
   async signin(credentials: SigninDto) {
     const { email, password } = credentials;
+    const user = await this.userService.getUserByEmail(email);
 
-    const userFound = await this.userService.getUserByEmail(email);
-
-    if (!userFound) {
-      throw new UnauthorizedException('Wrong credentials');
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    const passwordMatch = await bcrypt.compare(password, userFound.password);
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Wrong credentials');
-    }
+    const payload = {
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    };
 
-    return this.generateUserTokens(userFound.id);
+    return this.generateUserTokens(payload);
   }
 
-  async generateUserTokens(userId: number) {
-    const user = await this.userService.getUserById(userId);
+  async generateUserTokens(payload: { userId: number; tokenVersion: number }) {
+    const user = await this.userService.getUserById(payload.userId);
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new UnauthorizedException('Usuario no encontrado');
     }
-    const accessToken = this.jwtService.sign({ userId });
-    const refreshToken = await this.refreshTokenService.createRefreshToken(user);
+
+    if (payload.tokenVersion !== user.tokenVersion) {
+      throw new UnauthorizedException('Versión de token inválida');
+    }
+
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken =
+      await this.refreshTokenService.createRefreshToken(user);
+
     return {
       accessToken,
       refreshToken: refreshToken.token,
@@ -83,11 +89,23 @@ export class AuthService {
   async refreshToken(token: string) {
     const refreshToken = await this.refreshTokenService.findToken(token);
     if (!refreshToken || refreshToken.expiresAt < new Date()) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+      throw new UnauthorizedException('Refresh token inválido o expirado');
     }
 
-    const newAccessToken = this.jwtService.sign({ id: refreshToken.user.id });
+    const user = await this.userService.getUserById(refreshToken.user.id);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
 
-    return { accessToken: newAccessToken };
+    return this.generateUserTokens({
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    });
+  }
+
+  async logout(userId: number) {
+    await this.userService.incrementTokenVersion(userId);
+    await this.refreshTokenService.deleteAllForUser(userId);
+    return { message: 'Logout exitoso. Todos los tokens fueron invalidados.' };
   }
 }

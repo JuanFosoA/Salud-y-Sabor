@@ -38,4 +38,12 @@ export class RefreshTokenService {
   async deleteToken(token: string): Promise<void> {
     await this.refreshTokenRepository.delete({ token });
   }
+
+  async deleteAllForUser(userId: number): Promise<void> {
+    await this.refreshTokenRepository
+      .createQueryBuilder()
+      .delete()
+      .where('userId = :userId', { userId })
+      .execute();
+  }
 }
