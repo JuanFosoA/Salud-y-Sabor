@@ -20,10 +20,11 @@ function CarouselComponent() {
           grabCursor={true}
           centeredSlides={true}
           loop={true}
-          slidesPerView={2} // Mostrar solo 3: activo + 2 laterales
+          slidesPerView={2}
+          spaceBetween={0}
           coverflowEffect={{
             rotate: 0,
-            stretch: 0,
+            stretch: 60,
             depth: 100,
             modifier: 2.5,
           }}
@@ -58,43 +59,30 @@ function CarouselComponent() {
         </SwiperSlide>
         <SwiperSlide className="custom-slide">
           <div className="slide-card">
-            <img src={comida1} alt="" />
-            <p className="slide-title">Comida 1</p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide className="custom-slide">
-          <div className="slide-card">
-            <img src={comida2} alt="" />
-            <p className="slide-title">Comida 2</p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide className="custom-slide">
-          <div className="slide-card">
             <img src={comida3} alt="" />
-            <p className="slide-title">Comida 3</p>
+            <p className="slide-title">Pasta</p>
           </div>
         </SwiperSlide>
         <SwiperSlide className="custom-slide">
           <div className="slide-card">
             <img src={comida1} alt="" />
-            <p className="slide-title">Comida 1</p>
+            <p className="slide-title">Tortilla</p>
           </div>
         </SwiperSlide>
         <SwiperSlide className="custom-slide">
           <div className="slide-card">
             <img src={comida2} alt="" />
-            <p className="slide-title">Comida 2</p>
+            <p className="slide-title">Brocoli con pollo</p>
           </div>
         </SwiperSlide>
         <SwiperSlide className="custom-slide">
           <div className="slide-card">
-            <img src={comida3} alt="" />
-            <p className="slide-title">Comida 3</p>
+            <img src={comida2} alt="" />
+            <p className="slide-title">Brocoli con pollo</p>
           </div>
         </SwiperSlide>
       </Swiper>
 
-      {/* Mueve esto fuera del Swiper */}
       <div className="slider-controler">
         <div className="arrows-container">
           <div className="swiper-button-prev slide-arrow">
