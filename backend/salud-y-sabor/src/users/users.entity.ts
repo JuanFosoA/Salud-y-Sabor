@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  TableInheritance,
   BeforeInsert,
   BeforeUpdate,
   OneToMany,
@@ -18,6 +19,7 @@ export enum DocumentType {
 export enum Role {
   ROLE_USER = 'ROLE_USER',
   ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_ESPECIALISTA = 'ROLE_ESPECIALISTA',
 }
 
 export enum Status {
@@ -31,7 +33,8 @@ export enum Disease {
 }
 
 @Entity({ name: 'users' })
-export class User {
+@TableInheritance({ column: { type: 'varchar', name: 'role' } })
+export abstract class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -53,22 +56,9 @@ export class User {
   @Column()
   password: string;
 
-  @Column('decimal', { precision: 6, scale: 2 })
-  height: number;
-
-  @Column('decimal', { precision: 6, scale: 2 })
-  weight: number;
-
-  @Column({
-    type: 'enum',
-    enum: Disease,
-  })
-  disease: Disease;
-
   @Column({
     type: 'enum',
     enum: Role,
-    default: Role.ROLE_USER,
   })
   role: Role;
 
@@ -104,3 +94,4 @@ export class User {
   @Column({ default: 0 })
   tokenVersion: number;
 }
+

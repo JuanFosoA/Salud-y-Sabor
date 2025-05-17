@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "5490c5fd-8428-45d6-8a56-325ae28e1cee"
+      }
+    },
+    "android": {
+      "package": "com.juanfosoa.saludysabor"
+    }
+  }
+}
