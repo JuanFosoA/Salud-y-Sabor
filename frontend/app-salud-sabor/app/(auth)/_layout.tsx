@@ -8,11 +8,11 @@ const AuthLayout = () => {
       headerStyle: { backgroundColor: "#F7B040" },
       headerTintColor: "#fff",
       headerTitleStyle: { fontSize: 18, fontWeight: "bold" },
-      headerShadowVisible: false, // Elimina la sombra
+      headerShadowVisible: false,
     }}
   >
-    <Stack.Screen name="login" options={{ title: "" }} />
-    <Stack.Screen name="register" options={{ title: "" }} />
+    <Stack.Screen name="login" options={{ title: "", headerShown: false }} />
+    <Stack.Screen name="register" options={{ title: "", headerShown: false  }} />
   </Stack>
 }
 export default AuthLayout

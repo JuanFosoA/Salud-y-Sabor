@@ -13,16 +13,20 @@ const IndexModule = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1}}>
       <StatusBar barStyle={"dark-content"} />
       <View style={styles.horizontalContainer}>
-        <View style={{maxWidth: 100}}><SaludSaborTitle /></View>
-        <SearchBar
+        <View style={{ maxWidth: 100,flex:1 }}>
+          <SaludSaborTitle color="#000" fontSize={20}/>
+        </View>
+        <View style={{flex:3}}>
+          <SearchBar
           search={search}
           setSearch={setSearch}
           placeholder="Buscar recetas"
           onFocus={handleSearchFocus}
         />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -34,9 +38,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    gap: 10, 
+    gap: 10,
   },
 });
-
 
 export default IndexModule;

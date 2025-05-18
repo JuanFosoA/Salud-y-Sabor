@@ -19,7 +19,6 @@ const SearchBar = ({ search, setSearch, placeholder ,onFocus}:{search: string, s
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
@@ -27,6 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderRadius: 10,
     paddingHorizontal: 10,
+    width: '100%',
   },
   searchInput: {
     flex: 1,

@@ -17,14 +17,21 @@ const HomeLayoutContent = () => {
         headerShadowVisible: false,
         headerShown: false,
       }}
-    ></Stack>
+    >
+      <Stack.Screen
+        name="index"
+        options={{ title: "Index", headerShown: false}}
+      />
+      <Stack.Screen
+        name="updateProfile"
+        options={{ title: "Actualizar datos", headerShown: false}}
+      />
+    </Stack>
   );
 };
 
 const HomeLayout = () => {
-  return (
-    <HomeLayoutContent />
-  );
+  return <HomeLayoutContent />;
 };
 
 export default HomeLayout;

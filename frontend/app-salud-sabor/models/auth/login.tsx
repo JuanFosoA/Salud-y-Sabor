@@ -1,145 +1,90 @@
+import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
+import SvgTop from "@/components/atoms/SvgTop";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StatusBar,
-  StyleSheet,
+  View,
   Text,
   TextInput,
-  View,
+  Pressable,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 const LoginModule = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const router = useRouter();
-
   const login = async () => {
     console.log("presione");
     router.replace("/(tabs)")
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <StatusBar
+        backgroundColor="#F7B040"
+        barStyle={Platform.OS === "android" ? "dark-content" : "light-content"}
+      />
+
+      <SvgTop></SvgTop>
+      <SaludSaborTitle color="white" fontSize={40}></SaludSaborTitle>
+
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.form}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={100}
       >
-        <StatusBar barStyle={"dark-content"} backgroundColor={"#F7B040"} />
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Iniciar Sesión</Text>
-          <TextInput style={styles.input} placeholder="Correo electrónico" />
+        <TextInput placeholder="Usuario" style={styles.input} />
+        <TextInput
+          placeholder="Contraseña"
+          secureTextEntry={!passwordVisible}
+          style={styles.input}
+        />
 
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.inputPassword}
-              placeholder="Contraseña"
-              secureTextEntry={!showPassword}
-            />
-            <Pressable
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showPassword ? "eye-off" : "eye"}
-                size={24}
-                color="gray"
-              />
-            </Pressable>
-          </View>
-          <View style={styles.login}>
-            <Pressable style={styles.loginButton} onPress={login}>
-              <Text style={styles.textWhite}>Iniciar Sesión</Text>
-            </Pressable>
+        <Pressable style={styles.loginButton} onPress={login}>
+          <Text style={styles.loginText}>Iniciar Sesión</Text>
+        </Pressable>
 
-            <Pressable style={styles.resetPasswordContainer}>
-              <Text style={styles.resetPassword}>
-                ¿Olvidaste la contraseña?
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+        <Pressable>
+          <Text style={styles.forgotPassword}>¿Olvidaste la contraseña?</Text>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
-  container: {
+  form: {
     flex: 1,
+    paddingHorizontal: 40,
     justifyContent: "center",
-    alignItems: "center",
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#aaa",
+    fontSize: 16,
+    marginBottom: 30,
+    paddingVertical: 8,
   },
   loginButton: {
     backgroundColor: "#F7B040",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    marginRight: 10,
+    paddingVertical: 15,
+    borderRadius: 30,
     alignItems: "center",
-    fontSize: 30,
+    marginTop: 10,
   },
-  textWhite: {
+  loginText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 18,
   },
-  contentContainer: {
-    flex: 1,
-    paddingTop: 100,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 45,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  input: {
-    fontSize: 20,
-    width: 300,
-    height: 55,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    textAlign: "left",
-    marginTop: 30,
-    paddingHorizontal: 20,
-  },
-  login: {
-    marginTop: 30,
-    fontSize: 15,
-    alignItems: "center",
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: 300,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    marginTop: 30,
-  },
-  inputPassword: {
-    flex: 1,
-    fontSize: 20,
-    height: 55,
-    paddingHorizontal: 20,
-  },
-  eyeIcon: {
-    padding: 10,
-  },
-  resetPasswordContainer: {
-    marginTop: 16,
-    paddingVertical: 8,
-    alignItems: "center",
-  },
-
-  resetPassword: {
-    color: "blue",
-    fontSize: 16,
+  forgotPassword: {
+    marginTop: 20,
     textAlign: "center",
+    color: "blue",
+    fontSize: 14,
   },
 });
+
 export default LoginModule;

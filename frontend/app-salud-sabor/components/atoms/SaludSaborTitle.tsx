@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 
-const SaludSaborTitle = () => {
+const SaludSaborTitle = ({ color, fontSize}:{color:string,fontSize:number}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>SALUD</Text>
-      <Text style={styles.text}>&</Text>
-      <Text style={styles.text}>SABOR</Text>
+      <Text style={[styles.text, { color, fontSize }]}>{`SALUD`}</Text>
+      <Text style={[styles.text, { color, fontSize }]}>{`&`}</Text>
+      <Text style={[styles.text, { color, fontSize }]}>{`SABOR`}</Text>
     </View>
   );
 };
@@ -17,9 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontSize: 20,
     fontWeight: "bold",
-    color: "#000",
     fontFamily: "serif",
   },
 });
