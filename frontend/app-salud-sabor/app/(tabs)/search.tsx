@@ -1,11 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import SearchModule from '@/models/tabs/SearchModule'
 
 const search = () => {
   return (
-    <View>
-      <Text>search</Text>
-    </View>
+    <SearchModule/>
   )
 }
 

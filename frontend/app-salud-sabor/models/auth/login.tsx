@@ -1,44 +1,68 @@
-import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SvgTop from "../../components/atoms/SvgTop";
 
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 const LoginModule = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  const login = async () => {
+    console.log("presione");
+    router.replace("/(tabs)")
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <SvgTop />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100}
+      >
+        <StatusBar barStyle={"dark-content"} backgroundColor={"#F7B040"} />
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>Iniciar Sesión</Text>
+          <TextInput style={styles.input} placeholder="Correo electrónico" />
 
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>Iniciar Sesión</Text>
-        <TextInput style={styles.input} placeholder="Correo electrónico" />
-
-        <View style={styles.passwordContainer}>
-          <TextInput style={styles.inputPassword} placeholder="Contraseña" secureTextEntry={!showPassword}/>
-          <Pressable
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeIcon}
-          >
-            <Ionicons
-              name={showPassword ? "eye-off" : "eye"}
-              size={24}
-              color="gray"
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.inputPassword}
+              placeholder="Contraseña"
+              secureTextEntry={!showPassword}
             />
-          </Pressable>
-        </View>
-        <View style={styles.login}>
-          <Pressable style={styles.loginButton} >
-            <Text style={styles.textWhite}>Iniciar Sesión</Text>
-          </Pressable>
+            <Pressable
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
+            </Pressable>
+          </View>
+          <View style={styles.login}>
+            <Pressable style={styles.loginButton} onPress={login}>
+              <Text style={styles.textWhite}>Iniciar Sesión</Text>
+            </Pressable>
 
-          <Pressable className="mt-4">
-            <Text style={styles.resetPassword}>
-              ¿Olvidaste la contraseña?
-            </Text>
-          </Pressable>
+            <Pressable style={styles.resetPasswordContainer}>
+              <Text style={styles.resetPassword}>
+                ¿Olvidaste la contraseña?
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -63,7 +87,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   contentContainer: {
-    marginTop: 80,
+    flex: 1,
+    paddingTop: 100,
+    alignItems: "center",
   },
   title: {
     fontSize: 45,
@@ -84,7 +110,7 @@ const styles = StyleSheet.create({
   login: {
     marginTop: 30,
     fontSize: 15,
-    alignItems:'center'
+    alignItems: "center",
   },
   passwordContainer: {
     flexDirection: "row",
@@ -104,8 +130,16 @@ const styles = StyleSheet.create({
   eyeIcon: {
     padding: 10,
   },
-  resetPassword:{
-    color:'blue'
-  }
+  resetPasswordContainer: {
+    marginTop: 16,
+    paddingVertical: 8,
+    alignItems: "center",
+  },
+
+  resetPassword: {
+    color: "blue",
+    fontSize: 16,
+    textAlign: "center",
+  },
 });
 export default LoginModule;

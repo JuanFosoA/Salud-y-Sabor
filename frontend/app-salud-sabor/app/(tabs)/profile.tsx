@@ -1,11 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import ProfileModule from '@/models/tabs/ProfileModule'
 
 const profile = () => {
   return (
-    <View>
-      <Text>profile</Text>
-    </View>
+    <ProfileModule/>
   )
 }
 
