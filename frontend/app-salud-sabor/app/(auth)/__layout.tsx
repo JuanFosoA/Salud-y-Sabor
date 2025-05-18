@@ -5,7 +5,7 @@ import { Stack } from 'expo-router'
 const AuthLayout = () => {
     return <Stack
     screenOptions={{
-      headerStyle: { backgroundColor: "#003B73" },
+      headerStyle: { backgroundColor: "#F7B040" },
       headerTintColor: "#fff",
       headerTitleStyle: { fontSize: 18, fontWeight: "bold" },
       headerShadowVisible: false, // Elimina la sombra

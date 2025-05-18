@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
+import { View, Text, Pressable, TextInput, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SvgTop from "../../components/atoms/SvgTop";
@@ -8,14 +8,21 @@ const LoginModule = () => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
-      <SvgTop />
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#F7B040'}/>
+      <View style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <SvgTop />
+      </View>
 
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Iniciar Sesión</Text>
         <TextInput style={styles.input} placeholder="Correo electrónico" />
 
         <View style={styles.passwordContainer}>
-          <TextInput style={styles.inputPassword} placeholder="Contraseña" secureTextEntry={!showPassword}/>
+          <TextInput
+            style={styles.inputPassword}
+            placeholder="Contraseña"
+            secureTextEntry={!showPassword}
+          />
           <Pressable
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
@@ -28,14 +35,12 @@ const LoginModule = () => {
           </Pressable>
         </View>
         <View style={styles.login}>
-          <Pressable style={styles.loginButton} >
+          <Pressable style={styles.loginButton}>
             <Text style={styles.textWhite}>Iniciar Sesión</Text>
           </Pressable>
 
-          <Pressable className="mt-4">
-            <Text style={styles.resetPassword}>
-              ¿Olvidaste la contraseña?
-            </Text>
+          <Pressable style={styles.resetPasswordContainer}>
+            <Text style={styles.resetPassword}>¿Olvidaste la contraseña?</Text>
           </Pressable>
         </View>
       </View>
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   contentContainer: {
-    marginTop: 80,
+    marginTop: 200,
   },
   title: {
     fontSize: 45,
@@ -84,7 +89,7 @@ const styles = StyleSheet.create({
   login: {
     marginTop: 30,
     fontSize: 15,
-    alignItems:'center'
+    alignItems: "center",
   },
   passwordContainer: {
     flexDirection: "row",
@@ -104,8 +109,16 @@ const styles = StyleSheet.create({
   eyeIcon: {
     padding: 10,
   },
-  resetPassword:{
-    color:'blue'
-  }
+  resetPasswordContainer: {
+    marginTop: 16,
+    paddingVertical: 8,
+    alignItems: "center",
+  },
+
+  resetPassword: {
+    color: "blue",
+    fontSize: 16,
+    textAlign: "center",
+  },
 });
 export default LoginModule;
