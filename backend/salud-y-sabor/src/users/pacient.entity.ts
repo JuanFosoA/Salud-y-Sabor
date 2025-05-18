@@ -4,6 +4,10 @@ import { Specialist } from './specialist.entity';
 
 @ChildEntity(Role.ROLE_USER)
 export class Pacient extends User {
+
+  @Column({ unique: true })
+  username: string;
+
   @Column({ type: 'text', nullable: true })
   historialMedico?: string;
 
@@ -25,11 +29,11 @@ export class Pacient extends User {
   @ManyToOne(() => Specialist, (specialist) => specialist.pacients)
   specialist: Specialist;
 
-  @ManyToMany(() => Menu, (m) => m.pacients)
-  menus: Menu[];
+  // @ManyToMany(() => Menu, (m) => m.pacients)
+  // menus: Menu[];
 
-  @ManyToMany(() => Recipe, (r) => r.pacientes)
-  recipes: Recipe[];
+  // @ManyToMany(() => Recipe, (r) => r.pacientes)
+  // recipes: Recipe[];
 
   
 }

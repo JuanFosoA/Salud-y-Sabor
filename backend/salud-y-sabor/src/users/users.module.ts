@@ -7,10 +7,12 @@ import { AuthModule } from '../auth/auth.module';
 import { RefreshTokenModule } from './refresh.token.module';
 import { ResetTokenModule } from './reset.token.module';
 import { MailService } from './services/mail.service';
+import { Pacient } from './pacient.entity';
+import { Specialist } from './specialist.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Pacient, Specialist]),
     forwardRef(() => AuthModule),
     RefreshTokenModule,
     ResetTokenModule,

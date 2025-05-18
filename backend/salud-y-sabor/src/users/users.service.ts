@@ -15,12 +15,16 @@ import * as bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import { ResetTokenService } from './reset.token.service';
 import { MailService } from './services/mail.service';
+import { SpecialistSignupDto } from 'src/auth/dto/specialistSignup.dto';
+import { Pacient } from './pacient.entity';
+import { Specialist } from './specialist.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Pacient) private pacientRepository: Repository<Pacient>,
+    @InjectRepository(Specialist) private specialistRepository: Repository<Specialist>,
     private resetTokenService: ResetTokenService,
     private mailService: MailService,
   ) {}
@@ -37,7 +41,7 @@ export class UsersService {
   }
 
   async getUserByUsername(username: string) {
-    return await this.userRepository.findOne({ where: { username } });
+    return await this.pacientRepository.findOne({ where: { username } });
   }
 
   async createUser(user: SignupDto) {
@@ -51,6 +55,19 @@ export class UsersService {
 
     const newUser = this.userRepository.create(user);
     return this.userRepository.save(newUser);
+  }
+
+  async createSpecialist(user: SpecialistSignupDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { document: user.document },
+    });
+
+    if (userFound) {
+      throw new HttpException('Specialist already exists', HttpStatus.CONFLICT);
+    }
+
+    const newSpecialist = this.specialistRepository.create(user);
+    return this.specialistRepository.save(newSpecialist);
   }
 
   async updateUser(

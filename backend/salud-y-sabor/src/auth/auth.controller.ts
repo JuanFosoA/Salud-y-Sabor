@@ -21,6 +21,7 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { SpecialistSignupDto } from './dto/specialistSignup.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +45,10 @@ export class AuthController {
   })
   async signUp(@Body() signupData: SignupDto) {
     return this.authService.signup(signupData);
+  }
+  @Post('signup/specialist')
+  async signUpSpecialist(@Body() signupData: SpecialistSignupDto) {
+    return this.authService.specialistSignup(signupData);
   }
 
   @Post('signin')

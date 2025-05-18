@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/users/refresh.token.service';
 import { PassThrough } from 'stream';
+import { SpecialistSignupDto } from './dto/specialistSignup.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,6 +48,25 @@ export class AuthService {
       height: signupData.height,
       weight: signupData.weight,
       disease: signupData.disease || Disease.NINGUNA,
+    });
+  }
+
+  async specialistSignup(signupData: SpecialistSignupDto): Promise<User> {
+    const email = signupData.email.toLowerCase().trim();
+
+    const emailInUse = await this.userService.getUserByEmail(email);
+    if (emailInUse) {
+      throw new BadRequestException('Email already in use');
+    }
+
+    const hashedPassword = await bcrypt.hash(signupData.password, 10);
+
+    return this.userService.createSpecialist({
+      fullname: signupData.fullname,
+      documentType: signupData.documentType,
+      document: signupData.document,
+      email,
+      password: hashedPassword,
     });
   }
 
