@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#000",
-    fontFamily: "serif", // puedes usar "Georgia", o una fuente personalizada si lo deseas
+    fontFamily: "serif",
   },
 });
 

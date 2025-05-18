@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
   horizontalContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between", // o "flex-start" si quieres pegarlos
+    justifyContent: "space-between",
     paddingHorizontal: 16,
-    gap: 10, // si usas React Native 0.71+ o Expo SDK 48+
+    gap: 10, 
   },
 });
 
