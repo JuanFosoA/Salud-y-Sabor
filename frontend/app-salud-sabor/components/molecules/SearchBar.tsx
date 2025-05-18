@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
-const SearchBar = ({ search, setSearch, placeholder }:{search: string, setSearch: (text: string) => void,placeholder: string}) => {
+const SearchBar = ({ search, setSearch, placeholder ,onFocus}:{search: string, setSearch: (text: string) => void,placeholder: string,onFocus?: () => void}) => {
   return (
     <View style={styles.container}>
       <TextInput
@@ -10,6 +10,7 @@ const SearchBar = ({ search, setSearch, placeholder }:{search: string, setSearch
         placeholder={placeholder}
         value={search}
         onChangeText={setSearch}
+        onFocus={onFocus}
       />
       <AntDesign testID="search-icon" name="search1" size={24} color="black" />
     </View>
@@ -21,7 +22,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
-    backgroundColor: "#f0f0f0",
+    borderColor:'#A6A4A4',
+    borderWidth: 1, 
     borderRadius: 10,
     paddingHorizontal: 10,
   },
