@@ -13,15 +13,18 @@ const ProfileModule = () => {
     email: "juancarlosmendoza@gmail.com",
     peso: "70 kg",
     altura: "175 cm",
-    recetasAsignadas: 8,
   };
 
   const handleLogout = () => {
     router.push("/(auth)/login");
   };
 
-  const handleUpdate = () => {
+  const handleUpdateProfile = () => {
     router.push("/updateProfile");
+  };
+
+  const handleUpdatePassword = () => {
+    router.push("/updatePassword");
   };
 
   return (
@@ -46,8 +49,12 @@ const ProfileModule = () => {
           </View>
         </View>
 
-        <Pressable style={styles.updateButton} onPress={handleUpdate}>
+        <Pressable style={styles.updateButton} onPress={handleUpdateProfile}>
           <Text style={styles.updateText}>Actualizar datos</Text>
+        </Pressable>
+
+        <Pressable style={styles.updateButton} onPress={handleUpdatePassword}>
+          <Text style={styles.updateText}>Cambiar contraseña</Text>
         </Pressable>
 
         <Pressable style={styles.logoutButton} onPress={handleLogout}>

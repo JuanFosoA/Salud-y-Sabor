@@ -31,9 +31,8 @@ const LoginModule = () => {
       <SvgTop></SvgTop>
       <SaludSaborTitle color="white" fontSize={40}></SaludSaborTitle>
 
-      <KeyboardAvoidingView
+      <View
         style={styles.form}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <TextInput placeholder="Usuario" style={styles.input} />
         <TextInput
@@ -49,7 +48,7 @@ const LoginModule = () => {
         <Pressable>
           <Text style={styles.forgotPassword}>¿Olvidaste la contraseña?</Text>
         </Pressable>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };

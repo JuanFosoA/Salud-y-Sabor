@@ -3,23 +3,23 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
-const UpdateProfileModel = () => {
+const UpdatePasswordModel = () => {
   const router = useRouter();
 
   const handleSave = () => {
-    console.log("Datos actualizados");
+    console.log("Contraseña actualizada");
     router.back();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentTitle}>
-        <Text style={styles.title}>Actualizar datos</Text>
+        <Text style={styles.title}>Actualizar contraseña</Text>
       </View>
 
-      <TextInput style={styles.input} placeholder="Altura (cm)" keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Peso (kg)" keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Correo electrónico" keyboardType="email-address" autoCapitalize="none" />
+      <TextInput style={styles.input} placeholder="Contraseña antigua" keyboardType="default" />
+      <TextInput style={styles.input} placeholder="Nueva contraseña" keyboardType="default" />
+      <TextInput style={styles.input} placeholder="Repetir nueva contraseña" keyboardType="default" autoCapitalize="none" />
 
       <Pressable style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UpdateProfileModel;
+export default UpdatePasswordModel;

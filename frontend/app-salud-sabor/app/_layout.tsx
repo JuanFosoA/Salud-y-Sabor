@@ -26,6 +26,10 @@ const HomeLayoutContent = () => {
         name="updateProfile"
         options={{ title: "Actualizar datos", headerShown: false}}
       />
+      <Stack.Screen
+        name="updatePassword"
+        options={{ title: "Actualizar contraseña", headerShown: false}}
+      />
     </Stack>
   );
 };

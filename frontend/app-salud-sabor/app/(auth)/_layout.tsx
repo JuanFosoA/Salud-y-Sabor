@@ -12,7 +12,6 @@ const AuthLayout = () => {
     }}
   >
     <Stack.Screen name="login" options={{ title: "", headerShown: false }} />
-    <Stack.Screen name="register" options={{ title: "", headerShown: false  }} />
   </Stack>
 }
 export default AuthLayout
