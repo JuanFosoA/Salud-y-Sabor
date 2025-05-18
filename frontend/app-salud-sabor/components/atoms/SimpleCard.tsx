@@ -1,21 +1,30 @@
-import { View, Image, StyleSheet, Text, ViewStyle } from 'react-native'
-import React from 'react'
+import { View, Image, StyleSheet, Text, ViewStyle, Pressable } from 'react-native';
+import React from 'react';
 
 interface SimpleCardProps {
-  title: string
-  imageName: string
-  style?: ViewStyle
-  size?: 'default' | 'small' // Nueva prop para controlar el tamaño
+  title: string;
+  imageName: string;
+  style?: ViewStyle;
+  size?: 'default' | 'small';
+  onPress?: () => void;
 }
 
-const SimpleCard: React.FC<SimpleCardProps> = ({ title, imageName, style, size = 'default' }) => {
-  // Estilos base
+const SimpleCard: React.FC<SimpleCardProps> = ({ 
+  title, 
+  imageName, 
+  style, 
+  size = 'default', 
+  onPress 
+}) => {
+  // Estilos base (fuera del componente para mejor rendimiento)
   const baseStyles = StyleSheet.create({
+    pressable: {
+      borderRadius: 8, // Mismo que el container para que el ripple se vea bien
+    },
     container: {
       backgroundColor: "white",
       borderRadius: 8,
       overflow: "hidden",
-      marginRight: 12,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
@@ -34,7 +43,7 @@ const SimpleCard: React.FC<SimpleCardProps> = ({ title, imageName, style, size =
       color: "#333",
       textAlign: 'center',
     }
-  })
+  });
 
   // Tamaños específicos
   const sizeStyles = {
@@ -56,9 +65,9 @@ const SimpleCard: React.FC<SimpleCardProps> = ({ title, imageName, style, size =
         height: 70
       }
     }
-  }
+  };
 
-  return (
+  const cardContent = (
     <View style={[baseStyles.container, sizeStyles[size].container, style]}>
       <Image 
         source={{ uri: imageName }} 
@@ -69,7 +78,24 @@ const SimpleCard: React.FC<SimpleCardProps> = ({ title, imageName, style, size =
         <Text style={baseStyles.title} numberOfLines={1}>{title}</Text>
       </View>
     </View>
-  )
-}
+  );
 
-export default SimpleCard
+  return onPress ? (
+    <Pressable 
+      onPress={onPress}
+      style={({ pressed }) => [
+        baseStyles.pressable,
+        { opacity: pressed ? 0.8 : 1 },
+        sizeStyles[size].container,
+        style
+      ]}
+      android_ripple={{ color: '#f0f0f0' }}
+    >
+      {cardContent}
+    </Pressable>
+  ) : (
+    cardContent
+  );
+};
+
+export default SimpleCard;
