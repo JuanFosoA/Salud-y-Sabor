@@ -44,17 +44,17 @@ export class UsersService {
     return await this.pacientRepository.findOne({ where: { username } });
   }
 
-  async createUser(user: SignupDto) {
-    const userFound = await this.userRepository.findOne({
+  async createPacient(user: SignupDto) {
+    const userFound = await this.pacientRepository.findOne({
       where: { document: user.document },
     });
 
     if (userFound) {
-      throw new HttpException('User already exists', HttpStatus.CONFLICT);
+      throw new HttpException('Pacient already exists', HttpStatus.CONFLICT);
     }
 
-    const newUser = this.userRepository.create(user);
-    return this.userRepository.save(newUser);
+    const newUser = this.pacientRepository.create(user);
+    return this.pacientRepository.save(newUser);
   }
 
   async createSpecialist(user: SpecialistSignupDto) {

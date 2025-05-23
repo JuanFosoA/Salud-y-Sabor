@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/users/refresh.token.service';
 import { PassThrough } from 'stream';
 import { SpecialistSignupDto } from './dto/specialistSignup.dto';
+import { StorageService } from 'src/shared/storage/storage.service';
 
 @Injectable()
 export class AuthService {
@@ -19,38 +20,10 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
+    private readonly storageService: StorageService,
   ) {}
 
-  async signup(signupData: SignupDto): Promise<User> {
-    const email = signupData.email.toLowerCase().trim();
-
-    const emailInUse = await this.userService.getUserByEmail(email);
-    if (emailInUse) {
-      throw new BadRequestException('Email already in use');
-    }
-
-    const usernameInUse = await this.userService.getUserByUsername(
-      signupData.username,
-    );
-    if (usernameInUse) {
-      throw new BadRequestException('Username already in use');
-    }
-
-    const hashedPassword = await bcrypt.hash(signupData.password, 10);
-
-    return this.userService.createUser({
-      fullname: signupData.fullname,
-      documentType: signupData.documentType,
-      document: signupData.document,
-      email,
-      username: signupData.username,
-      password: hashedPassword,
-      height: signupData.height,
-      weight: signupData.weight,
-      disease: signupData.disease || Disease.NINGUNA,
-    });
-  }
-
+  //CREAR ESPECIALISTA
   async specialistSignup(signupData: SpecialistSignupDto): Promise<User> {
     const email = signupData.email.toLowerCase().trim();
 
@@ -67,6 +40,47 @@ export class AuthService {
       document: signupData.document,
       email,
       password: hashedPassword,
+    });
+  }
+
+  //CREAR PACIENTE
+  async pacientSignup(
+    signupData: SignupDto,
+    historialMedicoFile?: Express.Multer.File,
+  ): Promise<User> {
+    const email = signupData.email.toLowerCase().trim();
+
+    const emailInUse = await this.userService.getUserByEmail(email);
+    if (emailInUse) {
+      throw new BadRequestException('Email already in use');
+    }
+
+    const usernameInUse = await this.userService.getUserByUsername(
+      signupData.username,
+    );
+    if (usernameInUse) {
+      throw new BadRequestException('Username already in use');
+    }
+
+    let medicalRecordFileName: string | undefined = undefined;
+    if (historialMedicoFile) {
+      medicalRecordFileName =
+        await this.storageService.saveMedicalRecord(historialMedicoFile);
+    }
+
+    const hashedPassword = await bcrypt.hash(signupData.password, 10);
+
+    return this.userService.createPacient({
+      fullname: signupData.fullname,
+      documentType: signupData.documentType,
+      document: signupData.document,
+      email,
+      username: signupData.username,
+      historialMedico: medicalRecordFileName,
+      password: hashedPassword,
+      // height: signupData.height,
+      // weight: signupData.weight,
+      disease: signupData.disease || Disease.NINGUNA,
     });
   }
 

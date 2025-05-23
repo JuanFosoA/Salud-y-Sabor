@@ -7,6 +7,7 @@ import {
   IsEnum,
   IsNumber,
   IsPositive,
+  IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { DocumentType, Disease } from '../../users/users.entity';
@@ -79,6 +80,10 @@ export class SignupDto {
   })
   username: string;
 
+  @IsOptional()
+  historialMedico?: string;
+
+
   @ApiProperty({
     description: 'Account password',
     example: 'SecureP@ss1',
@@ -102,31 +107,31 @@ export class SignupDto {
   })
   password: string;
 
-  @ApiProperty({
-    description: 'Height in centimeters',
-    example: 165,
-    minimum: 50,
-    maximum: 250,
-    type: Number,
-  })
-  @IsNumber()
-  @IsPositive({
-    message: 'Height must be a positive number between 50-250 cm',
-  })
-  height: number;
+  // @ApiProperty({
+  //   description: 'Height in centimeters',
+  //   example: 165,
+  //   minimum: 50,
+  //   maximum: 250,
+  //   type: Number,
+  // })
+  // @IsNumber()
+  // @IsPositive({
+  //   message: 'Height must be a positive number between 50-250 cm',
+  // })
+  // height?: number;
 
-  @ApiProperty({
-    description: 'Weight in kilograms',
-    example: 58.5,
-    minimum: 30,
-    maximum: 300,
-    type: Number,
-  })
-  @IsNumber()
-  @IsPositive({
-    message: 'Weight must be a positive number between 30-300 kg',
-  })
-  weight: number;
+  // @ApiProperty({
+  //   description: 'Weight in kilograms',
+  //   example: 58.5,
+  //   minimum: 30,
+  //   maximum: 300,
+  //   type: Number,
+  // })
+  // @IsNumber()
+  // @IsPositive({
+  //   message: 'Weight must be a positive number between 30-300 kg',
+  // })
+  // weight?: number;
 
   @ApiPropertyOptional({
     description: 'Existing medical condition (optional)',

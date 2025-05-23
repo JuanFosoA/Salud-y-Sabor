@@ -12,10 +12,10 @@ export class Pacient extends User {
   historialMedico?: string;
 
   @Column('decimal', { precision: 6, scale: 2 })
-  height: number;
+  height?: number;
 
   @Column('decimal', { precision: 6, scale: 2 })
-  weight: number;
+  weight?: number;
 
   @Column({
     type: 'enum',

@@ -5,7 +5,9 @@ import {
   Post,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
@@ -22,12 +24,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { SpecialistSignupDto } from './dto/specialistSignup.dto';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
+  @Post('signup/pacient')
+  @UseInterceptors(FileInterceptor('historialMedicoFile'))
   @ApiOperation({
     summary: 'Register a new user',
     description:
@@ -43,9 +47,15 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'Email or username already registered',
   })
-  async signUp(@Body() signupData: SignupDto) {
-    return this.authService.signup(signupData);
+  // CREAR PACIENTE
+  async signUpPacient(
+    @Body() signupData: SignupDto,
+    @UploadedFile() historialMedico?: Express.Multer.File,
+  ) {
+    return this.authService.pacientSignup(signupData, historialMedico);
   }
+
+  // CREAR ESPECIALISTA
   @Post('signup/specialist')
   async signUpSpecialist(@Body() signupData: SpecialistSignupDto) {
     return this.authService.specialistSignup(signupData);
