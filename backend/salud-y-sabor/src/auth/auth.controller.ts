@@ -25,12 +25,14 @@ import {
 } from '@nestjs/swagger';
 import { SpecialistSignupDto } from './dto/specialistSignup.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { EspecialistaGuard } from 'src/guards/especialista.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup/pacient')
+  @UseGuards(EspecialistaGuard)
   @UseInterceptors(FileInterceptor('historialMedicoFile'))
   @ApiOperation({
     summary: 'Register a new user',
@@ -61,7 +63,7 @@ export class AuthController {
     return this.authService.specialistSignup(signupData);
   }
 
-  @Post('signin')
+  @Post('signin/specialist')
   @ApiOperation({
     summary: 'User login',
     description:
@@ -80,11 +82,25 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: 'Invalid request format',
   })
-  async signin(
+
+  // SIGNIN ESPECIALISTA
+  async signinSpecialist(
     @Body() credentials: SigninDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken } = await this.authService.signin(credentials);
+    const { accessToken } =
+      await this.authService.specialistSignin(credentials);
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    return res.status(200).json({ message: 'Login succesful' });
+  }
+
+  @Post('signin/pacient')
+  // SIGNIN PACIENTE
+  async signinPacient(
+    @Body() credentials: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken } = await this.authService.pacientSignin(credentials);
     res.setHeader('Authorization', `Bearer ${accessToken}`);
     return res.status(200).json({ message: 'Login succesful' });
   }
@@ -109,6 +125,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'Invalid or expired token',
   })
+  // LOGOUT
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     const userId = req.user.id;
 

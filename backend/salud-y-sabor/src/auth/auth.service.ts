@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User, Disease } from 'src/users/users.entity';
+import { User, Disease, Role } from 'src/users/users.entity';
 import { SignupDto } from './dto/signup.dto';
 import * as bcrypt from 'bcryptjs';
 import { SigninDto } from './dto/signin.dto';
@@ -84,11 +84,41 @@ export class AuthService {
     });
   }
 
-  async signin(credentials: SigninDto) {
+  // Iniciar sesión especialista
+  async specialistSignin(credentials: SigninDto) {
     const { email, password } = credentials;
     const user = await this.userService.getUserByEmail(email);
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || user.role != Role.ROLE_ESPECIALISTA) {
+      throw new UnauthorizedException(
+        'No tienes permisos para acceder a este contenido',
+      );
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const payload = {
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    };
+
+    return this.generateUserTokens(payload);
+  }
+
+  // Iniciar Sesión Paciente
+  async pacientSignin(credentials: SigninDto) {
+    const { email, password } = credentials;
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user || user.role != Role.ROLE_USER) {
+      throw new UnauthorizedException(
+        'Debes ser un paciente para acceder a este recurso',
+      );
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
