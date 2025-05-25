@@ -8,6 +8,7 @@ import { UsersModule } from 'src/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { RefreshTokenModule } from 'src/users/refresh.token.module';
 import { StorageService } from 'src/shared/storage/storage.service';
+import { EspecialistaGuard } from 'src/guards/especialista.guard';
 
 @Module({
   imports: [
@@ -17,11 +18,11 @@ import { StorageService } from 'src/shared/storage/storage.service';
       secret: process.env.SECRET_KEY,
       signOptions: { expiresIn: '30m' },
     }),
-    forwardRef(() => UsersModule), //Cambiado para evitar la dependencia circular
+    forwardRef(() => UsersModule),
     RefreshTokenModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, StorageService],
+  providers: [AuthService, StorageService, EspecialistaGuard],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

@@ -12,7 +12,11 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/users/refresh.token.service';
 import { PassThrough } from 'stream';
 import { SpecialistSignupDto } from './dto/specialistSignup.dto';
-import { StorageService } from 'src/shared/storage/storage.service';
+import {
+  StorageFolder,
+  StorageService,
+} from 'src/shared/storage/storage.service';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -61,11 +65,12 @@ export class AuthService {
     if (usernameInUse) {
       throw new BadRequestException('Username already in use');
     }
-
     let medicalRecordFileName: string | undefined = undefined;
     if (historialMedicoFile) {
-      medicalRecordFileName =
-        await this.storageService.saveMedicalRecord(historialMedicoFile);
+      medicalRecordFileName = await this.storageService.saveFile(
+        historialMedicoFile,
+        StorageFolder.MEDICAL_RECORDS,
+      );
     }
 
     const hashedPassword = await bcrypt.hash(signupData.password, 10);

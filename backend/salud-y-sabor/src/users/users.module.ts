@@ -9,6 +9,9 @@ import { ResetTokenModule } from './reset.token.module';
 import { MailService } from './services/mail.service';
 import { Pacient } from './pacient.entity';
 import { Specialist } from './specialist.entity';
+import { EspecialistaGuard } from 'src/guards/especialista.guard';
+import { PacientsController } from './pacients.controller';
+import { StorageService } from 'src/shared/storage/storage.service';
 
 @Module({
   imports: [
@@ -17,8 +20,8 @@ import { Specialist } from './specialist.entity';
     RefreshTokenModule,
     ResetTokenModule,
   ],
-  controllers: [UsersController],
-  providers: [UsersService, MailService],
+  controllers: [UsersController, PacientsController],
+  providers: [UsersService, StorageService, MailService, EspecialistaGuard],
   exports: [UsersService],
 })
 export class UsersModule {}

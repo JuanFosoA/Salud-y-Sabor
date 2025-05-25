@@ -18,15 +18,18 @@ import { MailService } from './services/mail.service';
 import { SpecialistSignupDto } from 'src/auth/dto/specialistSignup.dto';
 import { Pacient } from './pacient.entity';
 import { Specialist } from './specialist.entity';
+import { StorageFolder, StorageService } from 'src/shared/storage/storage.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Pacient) private pacientRepository: Repository<Pacient>,
-    @InjectRepository(Specialist) private specialistRepository: Repository<Specialist>,
+    @InjectRepository(Specialist)
+    private specialistRepository: Repository<Specialist>,
     private resetTokenService: ResetTokenService,
     private mailService: MailService,
+    private readonly storageService: StorageService,
   ) {}
 
   async getUserByEmail(email: string) {
@@ -43,7 +46,7 @@ export class UsersService {
   async getUserByUsername(username: string) {
     return await this.pacientRepository.findOne({ where: { username } });
   }
-
+  // PACIENTE
   async createPacient(user: SignupDto) {
     const userFound = await this.pacientRepository.findOne({
       where: { document: user.document },
@@ -57,6 +60,48 @@ export class UsersService {
     return this.pacientRepository.save(newUser);
   }
 
+  async getPacientById(id: number) {
+    const pacientFound = await this.pacientRepository.findOne({
+      where: { id },
+    });
+    return pacientFound;
+  }
+
+  async getAllPacients(skip: number = 0, take: number = 10) {
+    return this.pacientRepository.find({
+      skip,
+      take,
+      order: { id: 'ASC' },
+    });
+  }
+
+  async deletePacient(id: number) {
+    const pacient = await this.pacientRepository.findOne({ where: { id } });
+
+    if (!pacient) {
+      throw new HttpException('Pacient not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.pacientRepository.remove(pacient);
+    return { message: 'Pacient deleted successfully' };
+  }
+
+  async getMedicalRecord(pacientId: number) {
+    const pacient = await this.getPacientById(pacientId);
+    if (!pacient || !pacient.historialMedico) {
+      throw new NotFoundException('Medical record not found');
+    }
+
+    return {
+      filename: pacient.historialMedico,
+      data: await this.storageService.getFile(
+        pacient.historialMedico,
+        StorageFolder.MEDICAL_RECORDS,
+      ),
+    };
+  }
+
+  // ESPECIALISTA
   async createSpecialist(user: SpecialistSignupDto) {
     const userFound = await this.userRepository.findOne({
       where: { document: user.document },
@@ -115,20 +160,20 @@ export class UsersService {
   }
 
   async forgotPassword(email: string) {
-    const user = await this.userRepository.findOne({ where: { email } })
+    const user = await this.userRepository.findOne({ where: { email } });
     if (user) {
       const resetToken = nanoid(64);
       await this.resetTokenService.createResetToken(user, resetToken);
-      await this.mailService.sendPasswordResetEmail(email, resetToken)
+      await this.mailService.sendPasswordResetEmail(email, resetToken);
     }
 
-    return { message: 'If this user exits, they will receive an email'}
+    return { message: 'If this user exits, they will receive an email' };
   }
 
-  async resetPassword(newPassword: string, resetToken: string){
+  async resetPassword(newPassword: string, resetToken: string) {
     const token = await this.resetTokenService.findToken(resetToken);
     if (!token) {
-      throw new UnauthorizedException('Invalid token')
+      throw new UnauthorizedException('Invalid token');
     }
     await this.resetTokenService.deleteToken(token);
 

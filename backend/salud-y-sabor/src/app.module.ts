@@ -7,9 +7,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './guards/auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { RecipesModule } from './recipes/recipes.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/files',
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -23,6 +31,8 @@ import { AuthGuard } from './guards/auth.guard';
     }),
     AuthModule,
     UsersModule,
+    RecipesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

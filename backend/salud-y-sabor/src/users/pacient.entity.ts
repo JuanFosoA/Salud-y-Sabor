@@ -1,6 +1,9 @@
 import { ChildEntity, Column, ManyToMany, ManyToOne } from 'typeorm';
 import { Disease, Role, User } from './users.entity';
 import { Specialist } from './specialist.entity';
+import { Recipe } from 'src/recipes/recipes.entity';
+import { Exclude } from 'class-transformer';
+import { Menu } from 'src/menus/menus.entity';
 
 @ChildEntity(Role.ROLE_USER)
 export class Pacient extends User {
@@ -27,13 +30,16 @@ export class Pacient extends User {
   observaciones?: string;
 
   @ManyToOne(() => Specialist, (specialist) => specialist.pacients)
+  @Exclude()
   specialist: Specialist;
 
-  // @ManyToMany(() => Menu, (m) => m.pacients)
-  // menus: Menu[];
+  @ManyToMany(() => Menu, (m) => m.pacients)
+  @Exclude()
+  menus?: Menu[];
 
-  // @ManyToMany(() => Recipe, (r) => r.pacientes)
-  // recipes: Recipe[];
+  @ManyToMany(() => Recipe, (recipe) => recipe.pacients)
+  @Exclude()
+  recipes?: Recipe[];
 
   
 }

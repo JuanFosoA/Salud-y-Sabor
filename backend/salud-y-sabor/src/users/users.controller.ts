@@ -34,7 +34,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Update user profile',
     description:
-      "Updates the authenticated user's profile information (e.g., name, email, avatar). Requires a valid JWT token.",
+      "Updates the authenticated user's profile information (e.g., name, email). Requires a valid JWT token.",
   })
   @ApiOkResponse({
     description: 'Profile updated successfully',

@@ -1,51 +1,81 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
+export enum StorageFolder {
+  MEDICAL_RECORDS = 'medical-records',
+  RECIPE_IMAGES = 'recipe-images',
+}
+
 @Injectable()
 export class StorageService {
-  private readonly uploadPath = path.join(__dirname, '..', '..', 'medical-records');
+  private readonly basePath = path.join(process.cwd(), 'uploads');
   private readonly logger = new Logger(StorageService.name);
 
   constructor() {
-    this.initializeStorage().catch((error) => {
-      this.logger.error(
-        `Failed to initialize storage directory: ${error.message}`,
-      );
-      // Opcional: Lanzar el error para detener la aplicación si es crítico
-      // throw new Error('Storage initialization failed');
+    // Inicializa todas las carpetas necesarias al iniciar
+    this.initializeFolders(Object.values(StorageFolder)).catch((error) => {
+      this.logger.error(`Failed to initialize storage: ${error.message}`);
     });
   }
 
-  private async initializeStorage(): Promise<void> {
+  private async initializeFolders(folders: string[]): Promise<void> {
     try {
-      await fs.mkdir(this.uploadPath, { recursive: true });
-      this.logger.log(
-        `Medical records directory initialized at ${this.uploadPath}`,
-      );
-    } catch (error) {
-      if (error.code !== 'EEXIST') {
-        this.logger.error(`Critical storage error: ${error.message}`);
-        throw error; // Relanza errores no esperados
+      await fs.mkdir(this.basePath, { recursive: true });
+
+      // Crea subcarpetas
+      for (const folder of folders) {
+        const folderPath = path.join(this.basePath, folder);
+        await fs.mkdir(folderPath, { recursive: true });
+        this.logger.log(`Folder initialized: ${folderPath}`);
       }
-      // Si es EEXIST (directorio ya existe), solo lo registramos
-      this.logger.debug('Medical records directory already exists');
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error;
+      this.logger.debug('Folders already exist');
     }
   }
 
-  async saveMedicalRecord(file: Express.Multer.File): Promise<string> {
+  async saveFile(
+    file: Express.Multer.File,
+    folder: StorageFolder,
+  ): Promise<string> {
     const fileExtension = path.extname(file.originalname);
     const fileName = `${uuidv4()}${fileExtension}`;
-    const filePath = path.join(this.uploadPath, fileName);
+    const filePath = path.join(this.basePath, folder, fileName);
+
+    await fs.writeFile(filePath, file.buffer);
+    this.logger.debug(`File saved to ${folder}/${fileName}`);
+    return fileName;
+  }
+
+  async deleteFile(fileName: string, folder: StorageFolder): Promise<void> {
+    const filePath = path.join(this.basePath, folder, fileName);
 
     try {
-      await fs.writeFile(filePath, file.buffer);
-      this.logger.debug(`Medical record saved: ${fileName}`);
-      return fileName;
+      await fs.access(filePath);
+      await fs.unlink(filePath);
+      this.logger.debug(`File deleted: ${filePath}`);
     } catch (error) {
-      this.logger.error(`Failed to save medical record: ${error.message}`);
-      throw new Error('Could not save medical record');
+      if (error.code === 'ENOENT') {
+        this.logger.warn(`File not found: ${filePath}`);
+        return;
+      }
+      throw error;
+    }
+  }
+
+  async getFile(fileName: string, folder: StorageFolder): Promise<Buffer> {
+    const filePath = path.join(this.basePath, folder, fileName);
+
+    try {
+      await fs.access(filePath);
+      return await fs.readFile(filePath);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new NotFoundException('File not found');
+      }
+      throw error;
     }
   }
 }
