@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="menus.css" />
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <title>Dashboard admin</title>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="#">
+            <i class="fas fa-grin-tongue-wink"></i>
+            <div class="title">Salud & Sabor</div>
+          </a>
+        </li>
+        <li>
+          <a href="../Recetas/recetas.html">
+            <i class="fas fa-hat-chef"></i>
+            <div class="title">Recetas</div>
+          </a>
+        </li>
+        <li>
+          <a href="../Menús/menus.html">
+            <i class="fas fa-clipboard-list"></i>
+            <div class="title">Menús</div>
+          </a>
+        </li>
+        <li>
+          <a href="../Pacientes/pacientes.html">
+            <i class="fas fa-book-user"></i>
+            <div class="title">Pacientes</div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  <div class="main">
+    <div class="top-bar">
+      <div class="search">
+        <input type="text" name="search" placeholder="Buscar Menú" />
+        <label for="search">
+          <i class="fas fa-search"></i>
+        </label>
+      </div>
+      <i class="fas fa-bell"></i>
+      <div class="fas fa-user"></div>
+    </div>
+
+    <div class="cards"></div>
+    <div class="tables">
+      <div class="last-appointments">
+        <div class="heading">
+          <h2>&nbsp;&nbsp;Menús</h2>
+          <a href="#" class="btn" id="addMenuBtn">
+            <i class="fas fa-plus"></i>
+            <span>Add</span>
+          </a>
+        </div>
+        <table class="appointments">
+          <thead>
+            <td>Nombre</td>
+            <td>Descripción</td>
+            <td>Recetas</td>
+            <td>Acciones</td>
+          </thead>
+          <tbody>
+            <tr data-id="1">
+              <td>Menú Saludable</td>
+              <td>Ideal para pacientes con hipertensión</td>
+              <td>Receta A, Receta B</td>
+              <td>
+                <i class="far fa-eye"></i>
+                <i class="far fa-edit edit-menu-btn"></i>
+                <i class="far fa-trash-alt delete-menu-btn"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="menuModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="menuModalClose">&times;</span>
+      <h2 id="menuModalTitle">Crear Nuevo Menú</h2>
+      <form id="menuForm">
+        <label for="menuName">Nombre del Menú:</label>
+        <input type="text" id="menuName" name="menuName" required>
+
+        <label for="menuDescription">Descripción:</label>
+        <textarea id="menuDescription" name="menuDescription" rows="3" required></textarea>
+
+        <label for="menuRecipes">Recetas (IDs separados por coma):</label>
+        <input type="text" id="menuRecipes" name="menuRecipes" placeholder="Ej: 1,2,5" required>
+
+        <button type="submit" class="create-btn" id="menuSubmitBtn">Crear Menú</button>
+        <button type="button" class="delete-btn-modal" id="menuDeleteBtnModal" style="display: none;">Eliminar Menú</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script para controlar el modal de Menús -->
+  <script>
+    const menuModal = document.getElementById("menuModal");
+    const addMenuBtn = document.getElementById("addMenuBtn");
+    const menuModalClose = document.getElementById("menuModalClose");
+    const menuModalTitle = document.getElementById("menuModalTitle");
+    const menuSubmitBtn = document.getElementById("menuSubmitBtn");
+    const menuDeleteBtnModal = document.getElementById("menuDeleteBtnModal");
+    const menuForm = document.getElementById("menuForm");
+
+    addMenuBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      menuModalTitle.textContent = "Crear Nuevo Menú";
+      menuSubmitBtn.textContent = "Crear Menú";
+      menuDeleteBtnModal.style.display = "none";
+      menuForm.reset();
+      menuModal.style.display = "block";
+    });
+
+    menuModalClose.addEventListener("click", function () {
+      menuModal.style.display = "none";
+    });
+
+    const editMenuBtns = document.querySelectorAll('.edit-menu-btn');
+    editMenuBtns.forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const row = this.closest("tr");
+        const name = row.cells[0].textContent;
+        const description = row.cells[1].textContent;
+        const recipeIds = row.cells[2].textContent;
+
+        menuModalTitle.textContent = "Editar Menú";
+        menuSubmitBtn.textContent = "Actualizar Menú";
+        menuDeleteBtnModal.style.display = "inline-block";
+        document.getElementById("menuName").value = name;
+        document.getElementById("menuDescription").value = description;
+        document.getElementById("menuRecipes").value = recipeIds;
+
+        menuModal.style.display = "block";
+      });
+    });
+
+    menuDeleteBtnModal.addEventListener("click", function () {
+      if (confirm("¿Seguro que desea eliminar este menú?")) {
+        alert("Menú eliminado");
+        menuModal.style.display = "none";
+      }
+    });
+
+    window.addEventListener("click", function (e) {
+      if (e.target === menuModal) {
+        menuModal.style.display = "none";
+      }
+    });
+  </script>
+
+</body>
+</html>
