@@ -1,0 +1,138 @@
+.container {
+    max-width: 124rem;
+    padding: 6rem 1rem 4rem 1rem; /* más espacio arriba */
+    margin: 0 auto;
+  }
+
+.swiper_container {
+  height: auto; /* para que no genere espacio extra innecesario */
+  padding-bottom: 5rem; /* espacio justo para la paginación */
+  position: relative;
+  width: 35rem;
+}
+.swiper-slide {
+  position: relative;
+}
+.swiper-slide img {
+  border-radius: 2rem;
+}
+
+.swiper-slide-shadow-left,
+.swiper-slide-shadow-right {
+  display: none;
+}
+
+.slider-controler {
+  position: relative;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slider-controler .swiper-button-next {
+  left: 58% !important;
+  transform: translateX(-58%) !important;
+}
+
+.slider-controler .slide-arrow {
+  background-color: var(--white);
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  left: 42%;
+  transform: translateX(-42%);
+  filter: drop-shadow(0px 8px 24px rgba(18, 28, 53, 0.1));
+}
+
+.slider-controler .slide-arrow ion-icon {
+  font-size: 2rem;
+  color: #222224;
+}
+
+.slider-controler .slide-arrow::after {
+  content: "";
+}
+
+.swiper-pagination {
+  position: absolute;
+  bottom: 0.5rem; /* bien pegado al slide */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.swiper-pagination .swiper-pagination-bullet {
+  filter: drop-shadow(0px 8px 24px rgba(18, 28, 53, 0.1));
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+  background: var(--red);
+}
+
+.slide-card {
+  background-color: #c6ff94; /* verde claro */
+  border-radius: 2rem;
+  width: 14rem;
+  height: 18rem;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(18, 28, 53, 0.1);
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.slide-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  object-fit: cover;
+  max-height: 30rem;
+}
+
+.slide-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 1rem;
+  color: #222;
+}
+
+.swiper-slide-active .slide-card {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.swiper-slide .slide-card {
+  transition: transform 0.3s ease;
+}
+
+.arrows-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.slider-controler .slide-arrow {
+  background-color: white;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(18, 28, 53, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+
+.slider-controler .slide-arrow ion-icon {
+  font-size: 1.5rem;
+  color: #333;
+}
