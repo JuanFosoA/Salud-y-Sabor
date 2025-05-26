@@ -6,7 +6,6 @@ import { useRouter } from "expo-router";
 import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
 import SimpleCard from "@/components/atoms/SimpleCard";
 import CategoriesSection from "@/components/molecules/CategoriesSection";
-import RecipeDetail from "@/app/recipe/recipeDetail";
 
 const IndexModule = () => {
   const [search, setSearch] = useState("");
@@ -16,7 +15,7 @@ const IndexModule = () => {
   };
 
   const goToMyRecipes = () => {
-    router.push("/recipe/recipeDetail"); 
+    router.push("/recipe/recipe"); 
   };
 
   return (

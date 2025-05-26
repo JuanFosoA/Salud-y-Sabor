@@ -14,7 +14,7 @@ const SimpleCard: React.FC<SimpleCardProps> = ({ title, imageName, style, size =
     container: {
       backgroundColor: "white",
       borderRadius: 8,
-      overflow: "hidden",
+      overflow: "hidden", 
       marginRight: 12,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },

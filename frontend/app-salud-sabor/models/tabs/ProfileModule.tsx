@@ -1,26 +1,91 @@
-import { View, StyleSheet, Pressable, Text } from "react-native";
-import React from "react";
+import { View, StyleSheet, Pressable, Text, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthConext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export interface User {
+  id: number;
+  fullname: string;
+  username: string;
+  email: string;
+  password: string;
+  document: string;
+  documentType: string; 
+  disease: string;
+  weight: string;  
+  height: string;
+  role: string; 
+  status: string;   
+  specialistId: number;
+  tokenVersion: number;
+  historialMedico: string | null;
+  observaciones: string | null;
+  createdAt: string;   
+  updatedAt: string; 
+}
 
 const ProfileModule = () => {
   const router = useRouter();
-  const {logout} = useAuth()
+  const { logout } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const user = {
-    name: "Juan Carlos Mendoza",
-    email: "juancarlosmendoza@gmail.com",
-    peso: "70 kg",
-    altura: "175 cm",
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("@myToken");
+        if (!token) {
+          throw new Error("No se encontró token de autenticación");
+        }
+
+        const response = await fetch("https://zzzbuilds-server.lat/pacients/2",{
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        console.log("Datos paciente: ",data);
+        
+        setUser(data);
+      } catch (error) {
+        console.error("Error al obtener datos del usuario:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleLogout = () => {
-    logout()
+    logout();
     router.push("/(auth)/login");
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#F7B040" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Text>No se pudo cargar la información del usuario.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -30,17 +95,17 @@ const ProfileModule = () => {
 
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{user.fullname}</Text>
           <Text style={styles.email}>{user.email}</Text>
 
           <View style={styles.infoRow}>
             <Text style={styles.label}>Altura:</Text>
-            <Text style={styles.value}>{user.altura}</Text>
+            <Text style={styles.value}>{user.height}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <Text style={styles.label}>Peso:</Text>
-            <Text style={styles.value}>{user.peso}</Text>
+            <Text style={styles.value}>{user.weight}</Text>
           </View>
         </View>
 
@@ -105,18 +170,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: "#333",
-  },
-  updateButton: {
-    backgroundColor: "#F7B040",
-    paddingHorizontal: 30,
-    paddingVertical: 12,
-    borderRadius: 25,
-    marginBottom: 16,
-  },
-  updateText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
   },
   logoutButton: {
     backgroundColor: "#ff4d4d",

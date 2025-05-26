@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "@/components/molecules/SearchBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailedCard from "@/components/molecules/DetailedCard";
+import { useRouter } from "expo-router";
 
 interface Recipe {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
   imageUrl: string;
@@ -18,6 +19,7 @@ const SearchModule = () => {
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
@@ -59,6 +61,12 @@ const SearchModule = () => {
     (recipe) =>
       recipe.name && recipe.name.toLowerCase().includes(search.toLowerCase())
   );
+  const getRecipeDetail = (id: string) => {
+    router.push({
+      pathname: "/recipe/[id]",
+      params: { id: id.toString() },
+    });
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -80,13 +88,15 @@ const SearchModule = () => {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
-            <DetailedCard
-              name={item.name}
-              createdAt={item.createdAt.slice(0, 10)}
-              imageName={
-                "https://logowik.com/content/uploads/images/chef-restaurant5078.logowik.com.webp"
-              }
-            />
+            <Pressable onPress={() => getRecipeDetail(item.id)}>
+              <DetailedCard
+                name={item.name}
+                createdAt={item.createdAt.slice(0, 10)}
+                imageName={
+                  "https://logowik.com/content/uploads/images/chef-restaurant5078.logowik.com.webp"
+                }
+              />
+            </Pressable>
           )}
           ListEmptyComponent={
             <View style={styles.centered}>
@@ -119,7 +129,7 @@ const styles = StyleSheet.create({
   centered: {
     flex: 1,
     justifyContent: "center",
-    marginLeft:70
+    marginLeft: 70,
   },
 });
 

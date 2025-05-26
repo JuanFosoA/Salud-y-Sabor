@@ -1,169 +1,177 @@
 import {
   View,
   Text,
-  StatusBar,
+  Image,
+  ScrollView,
   StyleSheet,
-  FlatList,
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
-import SearchBar from "@/components/molecules/SearchBar";
-import DetailedCard from "@/components/molecules/DetailedCard";
-import { useRouter } from "expo-router";
 
-interface Recipe {
+interface RecipeDetail {
   id: number;
   name: string;
   createdAt: string;
   imageUrl: string;
-  // añade aquí otros campos que tengas en la API
+  author: string;
+  ingredients: string[];
+  menus: string[];
+  imageName: string;
 }
 
-const RecipesList = () => {
-  const [search, setSearch] = useState("");
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+const RecipeDetailModel = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  const handleSearchFocus = () => {
-    router.push("/search");
-  };
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchRecipe = async () => {
       try {
-        // 1. Recupera el token de AsyncStorage
         const token = await AsyncStorage.getItem("@myToken");
-        console.log("Token en recetas: ", token);
 
-        if (!token) {
-          throw new Error("No se encontró token de autenticación");
-        }
-
-        // 2. Realiza la petición con la cabecera Authorization
-        const res = await fetch("https://zzzbuilds-server.lat/recipes", {
+        const res = await fetch(`https://zzzbuilds-server.lat/recipes/${id}`, {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (!res.ok) {
-          throw new Error(`Error ${res.status}: ${res.statusText}`);
-        }
-
-        const data: Recipe[] = await res.json();
-        console.log(data);
-
-        setRecipes(data);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message || "Error al cargar recetas");
+        const data = await res.json();
+        setRecipe(data);
+      } catch (error) {
+        console.error("Error al obtener la receta:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecipes();
-  }, []);
+    fetchRecipe();
+  }, [id]);
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color="#007bff" />
-      </SafeAreaView>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
     );
   }
 
-  if (error) {
+  if (!recipe) {
     return (
-      <SafeAreaView style={styles.centered}>
-        <Text style={styles.errorText}>{error}</Text>
-      </SafeAreaView>
+      <View style={styles.centered}>
+        <Text>Error al cargar receta</Text>
+      </View>
     );
   }
-  const filteredProducts = recipes.filter(
-    (recipe) =>
-      recipe.name &&
-      recipe.name.toLowerCase().includes(search.toLowerCase())
-  );
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="light-content" />
-      {/* Header */}
-      <View style={styles.horizontalContainer}>
-        <View style={{ maxWidth: 100, flex: 1 }}>
-          <SaludSaborTitle color="#000" fontSize={20} />
-        </View>
-        <View style={{ flex: 3 }}>
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-            placeholder="Buscar recetas"
-            onFocus={handleSearchFocus}
-          />
+    <ScrollView style={styles.container}>
+      <View style={styles.contentheader}>
+        <Image
+          source={{
+            uri: "https://logowik.com/content/uploads/images/chef-restaurant5078.logowik.com.webp",
+          }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+        <View style={styles.content}>
+          <Text style={styles.title}>{recipe.name}</Text>
+          {/* <Text style={styles.author}>➤ Añadido por: {recipe.author}</Text> */}
+          <Text style={styles.date}>📅 {recipe.createdAt.slice(0, 10)}</Text>
         </View>
       </View>
-      <View style={styles.sectionTitle}>
-        <Text>Mis recetas</Text>
+
+      <Text style={styles.sectionTitle}>Ingredientes</Text>
+      <View style={styles.bulletList}>
+        {recipe.ingredients.map((item, index) => (
+          <Text key={index} style={styles.bulletItem}>
+            • {item}
+          </Text>
+        ))}
       </View>
-      {/* Lista de recetas */}
-      <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <DetailedCard
-            name={item.name}
-            createdAt={item.createdAt.slice(0, 10)}
-            imageName={
-              "https://logowik.com/content/uploads/images/chef-restaurant5078.logowik.com.webp"
-            }
-          />
-        )}
-        ListEmptyComponent={
-          <View style={styles.centered}>
-            <Text>No se encontraron recetas.</Text>
+
+      <Text style={styles.sectionTitle}>Preparación</Text>
+      <View style={styles.steps}>
+        {recipe.menus.map((step, index) => (
+          <View key={index} style={styles.stepItem}>
+            <Text style={styles.stepTitle}>Paso {index + 1}</Text>
+            <Text style={styles.stepText}>{step}</Text>
           </View>
-        }
-      />
-    </SafeAreaView>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  horizontalContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    gap: 10,
-    marginTop: 16,
-  },
-  listContent: {
+  container: {
     padding: 16,
+    backgroundColor: "#fff",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  errorText: {
-    color: "red",
+  contentheader: {
+    flexDirection: "row",
+  },
+  content: {
+    width:220,
+    height:150,
+    justifyContent:'center'
+  },
+  image: {
+    width: "35%",
+    height: 120,
+    borderRadius: 12,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 12,
+    textAlign: "center",
+  },
+  author: {
+    fontSize: 16,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  date: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "#333",
-    textAlign: "center",
-    marginTop: 24,
+    fontWeight: "bold",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  bulletList: {
+    paddingLeft: 8,
+  },
+  bulletItem: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  steps: {
+    marginTop: 8,
+  },
+  stepItem: {
     marginBottom: 12,
-    marginLeft: 60,
+  },
+  stepTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  stepText: {
+    fontSize: 15,
+    lineHeight: 22,
   },
 });
 
-export default RecipesList;
+export default RecipeDetailModel;
