@@ -1,17 +1,21 @@
 .container {
     max-width: 124rem;
-    padding: 6rem 1rem 4rem 1rem; /* más espacio arriba */
+    padding: 6rem 1rem 4rem 1rem;
     margin: 0 auto;
   }
 
 .swiper_container {
-  height: auto; /* para que no genere espacio extra innecesario */
-  padding-bottom: 5rem; /* espacio justo para la paginación */
+  height: auto;
+  padding-bottom: 5rem; 
   position: relative;
-  width: 35rem;
+  width: 70rem;
 }
 .swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  height: 20rem;
 }
 .swiper-slide img {
   border-radius: 2rem;
@@ -57,7 +61,7 @@
 
 .swiper-pagination {
   position: absolute;
-  bottom: 0.5rem; /* bien pegado al slide */
+  bottom: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -72,7 +76,7 @@
 }
 
 .slide-card {
-  background-color: #c6ff94; /* verde claro */
+  background-color: #c6ff94;
   border-radius: 2rem;
   width: 14rem;
   height: 18rem;
@@ -84,6 +88,8 @@
   box-shadow: 0 8px 24px rgba(18, 28, 53, 0.1);
   overflow: hidden;
   padding: 1rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .slide-card img {

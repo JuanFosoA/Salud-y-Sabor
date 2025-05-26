@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  TableInheritance,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import { RefreshToken } from './refresh.tokens.entity';
 
@@ -18,6 +19,7 @@ export enum DocumentType {
 export enum Role {
   ROLE_USER = 'ROLE_USER',
   ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_ESPECIALISTA = 'ROLE_ESPECIALISTA',
 }
 
 export enum Status {
@@ -31,8 +33,8 @@ export enum Disease {
 }
 
 @Entity({ name: 'users' })
-export class User {
-
+@TableInheritance({ column: { type: 'varchar', name: 'role' } })
+export abstract class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -48,34 +50,18 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ unique: true })
-  username: string;
-
   @Column()
   password: string;
-
-  @Column('decimal', { precision: 6, scale: 2 })
-  height: number;
-
-  @Column('decimal', { precision: 6, scale: 2 })
-  weight: number;
-
-  @Column({
-    type: 'enum', 
-    enum: Disease, 
-  })
-  disease: Disease;
 
   @Column({
     type: 'enum',
     enum: Role,
-    default: Role.ROLE_USER,
   })
   role: Role;
 
   @Column({
-    type: 'enum', 
-    enum: Status, 
+    type: 'enum',
+    enum: Status,
     default: Status.ACTIVE,
   })
   status: Status;
@@ -102,4 +88,7 @@ export class User {
     this.email = this.email.toLowerCase().trim();
   }
 
+  @Column({ default: 0 })
+  tokenVersion: number;
 }
+

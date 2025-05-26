@@ -6,10 +6,19 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthGuard } from './guards/auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { RecipesModule } from './recipes/recipes.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/files',
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -20,12 +29,10 @@ import { JwtModule } from '@nestjs/jwt';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || '3462c20a13d79ed34862ddbd751d53f04584e14763905a3dace1cf26ad3060e4', 
-      signOptions: { expiresIn: '60s' },
-    }),
     AuthModule,
     UsersModule,
+    RecipesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

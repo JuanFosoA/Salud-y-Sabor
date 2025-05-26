@@ -3,13 +3,20 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User, Disease } from 'src/users/users.entity';
+import { User, Disease, Role } from 'src/users/users.entity';
 import { SignupDto } from './dto/signup.dto';
 import * as bcrypt from 'bcryptjs';
 import { SigninDto } from './dto/signin.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from 'src/users/refresh.token.service';
+import { PassThrough } from 'stream';
+import { SpecialistSignupDto } from './dto/specialistSignup.dto';
+import {
+  StorageFolder,
+  StorageService,
+} from 'src/shared/storage/storage.service';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -17,9 +24,34 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
+    private readonly storageService: StorageService,
   ) {}
 
-  async signup(signupData: SignupDto): Promise<User> {
+  //CREAR ESPECIALISTA
+  async specialistSignup(signupData: SpecialistSignupDto): Promise<User> {
+    const email = signupData.email.toLowerCase().trim();
+
+    const emailInUse = await this.userService.getUserByEmail(email);
+    if (emailInUse) {
+      throw new BadRequestException('Email already in use');
+    }
+
+    const hashedPassword = await bcrypt.hash(signupData.password, 10);
+
+    return this.userService.createSpecialist({
+      fullname: signupData.fullname,
+      documentType: signupData.documentType,
+      document: signupData.document,
+      email,
+      password: hashedPassword,
+    });
+  }
+
+  //CREAR PACIENTE
+  async pacientSignup(
+    signupData: SignupDto,
+    historialMedicoFile?: Express.Multer.File,
+  ): Promise<User> {
     const email = signupData.email.toLowerCase().trim();
 
     const emailInUse = await this.userService.getUserByEmail(email);
@@ -33,47 +65,93 @@ export class AuthService {
     if (usernameInUse) {
       throw new BadRequestException('Username already in use');
     }
+    let medicalRecordFileName: string | undefined = undefined;
+    if (historialMedicoFile) {
+      medicalRecordFileName = await this.storageService.saveFile(
+        historialMedicoFile,
+        StorageFolder.MEDICAL_RECORDS,
+      );
+    }
 
     const hashedPassword = await bcrypt.hash(signupData.password, 10);
-
-    return this.userService.createUser({
+    console.log(signupData.specialistId,);
+    
+    return this.userService.createPacient({
       fullname: signupData.fullname,
       documentType: signupData.documentType,
       document: signupData.document,
       email,
       username: signupData.username,
+      historialMedico: medicalRecordFileName,
       password: hashedPassword,
       height: signupData.height,
       weight: signupData.weight,
       disease: signupData.disease || Disease.NINGUNA,
+      specialistId: signupData.specialistId,
     });
   }
 
-  async signin(credentials: SigninDto) {
+  // Iniciar sesión especialista
+  async specialistSignin(credentials: SigninDto) {
     const { email, password } = credentials;
+    const user = await this.userService.getUserByEmail(email);
 
-    const userFound = await this.userService.getUserByEmail(email);
-
-    if (!userFound) {
-      throw new UnauthorizedException('Wrong credentials');
+    if (!user || user.role != Role.ROLE_ESPECIALISTA) {
+      throw new UnauthorizedException(
+        'No tienes permisos para acceder a este contenido',
+      );
     }
 
-    const passwordMatch = await bcrypt.compare(password, userFound.password);
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Wrong credentials');
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    return this.generateUserTokens(userFound.id);
+    const payload = {
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    };
+
+    return this.generateUserTokens(payload);
   }
 
-  async generateUserTokens(userId: number) {
-    const user = await this.userService.getUserById(userId);
+  // Iniciar Sesión Paciente
+  async pacientSignin(credentials: SigninDto) {
+    const { email, password } = credentials;
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user || user.role != Role.ROLE_USER) {
+      throw new UnauthorizedException(
+        'Debes ser un paciente para acceder a este recurso',
+      );
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const payload = {
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    };
+
+    return this.generateUserTokens(payload);
+  }
+
+  async generateUserTokens(payload: { userId: number; tokenVersion: number }) {
+    const user = await this.userService.getUserById(payload.userId);
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new UnauthorizedException('Usuario no encontrado');
     }
-    const accessToken = this.jwtService.sign({ userId });
-    const refreshToken = await this.refreshTokenService.createRefreshToken(user);
+
+    if (payload.tokenVersion !== user.tokenVersion) {
+      throw new UnauthorizedException('Versión de token inválida');
+    }
+
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken =
+      await this.refreshTokenService.createRefreshToken(user);
+
     return {
       accessToken,
       refreshToken: refreshToken.token,
@@ -83,11 +161,23 @@ export class AuthService {
   async refreshToken(token: string) {
     const refreshToken = await this.refreshTokenService.findToken(token);
     if (!refreshToken || refreshToken.expiresAt < new Date()) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+      throw new UnauthorizedException('Refresh token inválido o expirado');
     }
 
-    const newAccessToken = this.jwtService.sign({ id: refreshToken.user.id });
+    const user = await this.userService.getUserById(refreshToken.user.id);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
 
-    return { accessToken: newAccessToken };
+    return this.generateUserTokens({
+      userId: user.id,
+      tokenVersion: user.tokenVersion,
+    });
+  }
+
+  async logout(userId: number) {
+    await this.userService.incrementTokenVersion(userId);
+    await this.refreshTokenService.deleteAllForUser(userId);
+    return { message: 'Logout exitoso. Todos los tokens fueron invalidados.' };
   }
 }
