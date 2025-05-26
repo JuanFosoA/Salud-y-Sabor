@@ -12,10 +12,12 @@ import { Specialist } from './specialist.entity';
 import { EspecialistaGuard } from 'src/guards/especialista.guard';
 import { PacientsController } from './pacients.controller';
 import { StorageService } from 'src/shared/storage/storage.service';
+import { Menu } from 'src/menus/menus.entity';
+import { Recipe } from 'src/recipes/recipes.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Pacient, Specialist]),
+    TypeOrmModule.forFeature([User, Pacient, Specialist, Menu, Recipe]),
     forwardRef(() => AuthModule),
     RefreshTokenModule,
     ResetTokenModule,

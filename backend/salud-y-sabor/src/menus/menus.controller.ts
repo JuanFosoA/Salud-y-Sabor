@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { MenusService } from './menus.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
@@ -15,6 +16,7 @@ import { UpdateMenuDto } from './dto/update-menu.dto';
 import { Menu } from './menus.entity';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { EspecialistaGuard } from 'src/guards/especialista.guard';
+import { Request } from 'express';
 
 @Controller('menus')
 export class MenusController {
@@ -28,20 +30,23 @@ export class MenusController {
 
   @Get()
   @UseGuards(AuthGuard)
-  findAll(): Promise<Menu[]> {
-    return this.menusService.findAll();
+  findAll(@Req() request: Request): Promise<Menu[]> {
+    return this.menusService.findAll(request);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id') id: string): Promise<Menu> {
-    return this.menusService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() request: Request): Promise<Menu> {
+    return this.menusService.findOne(request, +id);
   }
 
   @Get('search/by-name')
   @UseGuards(AuthGuard)
-  findByName(@Query('name') name: string): Promise<Menu[]> {
-    return this.menusService.findByName(name);
+  findByName(
+    @Query('name') name: string,
+    @Req() request: Request,
+  ): Promise<Menu[]> {
+    return this.menusService.findByName(request, name);
   }
 
   @Put(':id')
@@ -49,13 +54,14 @@ export class MenusController {
   update(
     @Param('id') id: string,
     @Body() updateMenuDto: UpdateMenuDto,
+    @Req() request: Request,
   ): Promise<Menu> {
-    return this.menusService.update(+id, updateMenuDto);
+    return this.menusService.update(+id, updateMenuDto, request);
   }
 
   @Delete(':id')
   @UseGuards(EspecialistaGuard)
-  remove(@Param('id') id: string): Promise<void> {
-    return this.menusService.remove(+id);
+  remove(@Param('id') id: string, @Req() request: Request,): Promise<void> {
+    return this.menusService.remove(+id, request);
   }
 }

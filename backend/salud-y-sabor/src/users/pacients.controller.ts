@@ -3,7 +3,6 @@ import {
   UseGuards,
   Patch,
   Body,
-  Request,
   Req,
   Put,
   Post,
@@ -12,10 +11,13 @@ import {
   ParseIntPipe,
   Param,
   NotFoundException,
+  Query,
+  HttpException,
+  HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../guards/auth.guard';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -25,14 +27,114 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Pacient } from './pacient.entity';
+import { UpdatePacientDto } from './dto/updatePacient.dto';
+import { Request } from 'express';
 
 @Controller('pacients')
 export class PacientsController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get all pacients for current specialist',
+    description:
+      'Returns paginated list of pacients belonging to the authenticated specialist',
+  })
+  @ApiQuery({ name: 'skip', required: false, type: Number })
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'List of pacients',
+    type: [Pacient],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getAllPacients(
+    @Req() request: Request,
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number,
+  ) {
+    return this.usersService.getAllPacients(request, skip, take);
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Search pacients by name',
+    description: 'Search pacients by name for current specialist',
+  })
+  @ApiQuery({ name: 'name', required: true, type: String })
+  @ApiResponse({
+    status: 200,
+    description: 'List of matching pacients',
+    type: [Pacient],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getPacientsByName(
+    @Req() request: Request,
+    @Query('name') name: string,
+  ) {
+    if (!name || name.trim().length < 2) {
+      throw new HttpException(
+        'Name query parameter must be at least 2 characters',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.usersService.getPacientsByName(request, name);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete a pacient',
+    description: 'Delete a specific pacient belonging to current specialist',
+  })
+  @ApiResponse({ status: 200, description: 'Pacient deleted successfully' })
+  @ApiResponse({
+    status: 404,
+    description: 'Pacient not found or not authorized',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async deletePacient(
+    @Req() request: Request,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.usersService.deletePacient(request, id);
+  }
+
+  @Put(':id')
+  @ApiOperation({
+    summary: 'Update a pacient',
+    description:
+      'Update pacient information including menus and recipes associations',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pacient updated successfully',
+    type: Pacient,
+  })
+  @ApiResponse({ status: 404, description: 'Pacient not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async updatePacient(
+    @Req() request: Request,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePacientDto: UpdatePacientDto,
+  ) {
+    try {
+      return await this.usersService.updatePacient(
+        request,
+        id,
+        updatePacientDto,
+      );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
 
   @Get(':id')
   @ApiOperation({
@@ -50,28 +152,6 @@ export class PacientsController {
     }
 
     return pacient;
-  }
-
-  @Patch('profile')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Update user profile',
-    description:
-      "Updates the authenticated user's profile information (e.g., name, email). Requires a valid JWT token.",
-  })
-  @ApiOkResponse({
-    description: 'Profile updated successfully',
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Unauthorized if token is missing or invalid',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid input data (e.g., email format)',
-  })
-  updateProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    const userId = req.user.id;
-    return this.usersService.updateUser(userId, updateUserDto);
   }
 
   @Patch('change-password')

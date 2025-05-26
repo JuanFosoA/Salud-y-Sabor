@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -26,10 +27,15 @@ import {
 import { SpecialistSignupDto } from './dto/specialistSignup.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { EspecialistaGuard } from 'src/guards/especialista.guard';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post('signup/pacient')
   @UseGuards(EspecialistaGuard)
@@ -52,9 +58,26 @@ export class AuthController {
   // CREAR PACIENTE
   async signUpPacient(
     @Body() signupData: SignupDto,
+    @Req() request: Request,
     @UploadedFile() historialMedico?: Express.Multer.File,
   ) {
-    return this.authService.pacientSignup(signupData, historialMedico);
+    const authHeader = request.headers.authorization;
+    if (!authHeader)
+      throw new UnauthorizedException('Authorization header missing');
+    const token = authHeader.split(' ')[1];
+    const decoded = this.jwtService.decode(token) as { userId: number };
+    console.log(decoded.userId);
+    
+
+    const signupDataWithSpecialist = {
+      ...signupData,
+      specialistId: decoded.userId,
+    };
+
+    return this.authService.pacientSignup(
+      signupDataWithSpecialist,
+      historialMedico,
+    );
   }
 
   // CREAR ESPECIALISTA

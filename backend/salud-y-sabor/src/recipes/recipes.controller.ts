@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +18,8 @@ import { CreateRecipeDto } from './dto/CreateRecipe.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Request } from 'express';
+import * as request from 'supertest';
 
 @Controller('recipes')
 export class RecipesController {
@@ -34,20 +37,24 @@ export class RecipesController {
 
   @Get()
   @UseGuards(AuthGuard)
-  findAll(@Query('skip') skip: number, @Query('take') take: number) {
-    return this.recipeService.getAllRecipes(skip, take);
+  findAll(
+    @Req() request: Request,
+    @Query('skip') skip: number,
+    @Query('take') take: number,
+  ) {
+    return this.recipeService.getAllRecipes(request, skip, take);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id') id: number) {
-    return this.recipeService.getRecipeById(+id);
+  findOne(@Req() request: Request, @Param('id') id: number) {
+    return this.recipeService.getRecipeById(request, id);
   }
 
   @Get('search/:name')
   @UseGuards(AuthGuard)
-  findByName(@Param('name') name: string) {
-    return this.recipeService.getRecipeByName(name);
+  findByName(@Req() request: Request, @Param('name') name: string) {
+    return this.recipeService.getRecipeByName(request, name);
   }
 
   @Patch(':id')
@@ -56,9 +63,15 @@ export class RecipesController {
   update(
     @Param('id') id: number,
     @Body() updateRecipeDto: UpdateRecipeDto,
+    @Req() request: Request,
     @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.recipeService.updateRecipe(+id, updateRecipeDto, image);
+    return this.recipeService.updateRecipe(
+      +id,
+      updateRecipeDto,
+      request,
+      image,
+    );
   }
 
   @Delete(':id')

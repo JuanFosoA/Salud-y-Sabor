@@ -4,9 +4,13 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
-  IsUrl,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
-import { Status, DocumentType } from '../users.entity';
+import { Status, DocumentType, Disease } from '../users.entity';
+import { Type } from 'class-transformer';
+import { UpdateMenuDto } from '../../menus/dto/update-menu.dto';
+import { UpdateRecipeDto } from '../../recipes/dto/update-recipe.dto';
 
 export class UpdatePacientDto {
   @IsOptional()
@@ -15,7 +19,7 @@ export class UpdatePacientDto {
 
   @IsOptional()
   @IsEnum(DocumentType)
-  documentType?: string;
+  documentType?: DocumentType;
 
   @IsOptional()
   @IsString()
@@ -27,7 +31,7 @@ export class UpdatePacientDto {
 
   @IsOptional()
   @IsEnum(Status)
-  status?: string;
+  status?: Status;
 
   @IsOptional()
   @IsString()
@@ -46,11 +50,20 @@ export class UpdatePacientDto {
   weight?: number;
 
   @IsOptional()
-  @IsString()
-  disease?: string;
+  @IsEnum(Disease)
+  disease?: Disease;
 
   @IsOptional()
   @IsString()
   observaciones?: string;
 
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true }) 
+  menuIds?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true }) 
+  recipeIds?: number[];
 }

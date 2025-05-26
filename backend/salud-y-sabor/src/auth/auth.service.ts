@@ -74,7 +74,8 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(signupData.password, 10);
-
+    console.log(signupData.specialistId,);
+    
     return this.userService.createPacient({
       fullname: signupData.fullname,
       documentType: signupData.documentType,
@@ -83,9 +84,10 @@ export class AuthService {
       username: signupData.username,
       historialMedico: medicalRecordFileName,
       password: hashedPassword,
-      // height: signupData.height,
-      // weight: signupData.weight,
+      height: signupData.height,
+      weight: signupData.weight,
       disease: signupData.disease || Disease.NINGUNA,
+      specialistId: signupData.specialistId,
     });
   }
 
