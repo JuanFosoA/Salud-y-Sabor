@@ -34,12 +34,14 @@ import {
 import { Pacient } from './pacient.entity';
 import { UpdatePacientDto } from './dto/updatePacient.dto';
 import { Request } from 'express';
+import { EspecialistaGuard } from 'src/guards/especialista.guard';
 
 @Controller('pacients')
 export class PacientsController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(EspecialistaGuard)
   @ApiOperation({
     summary: 'Get all pacients for current specialist',
     description:
@@ -62,6 +64,7 @@ export class PacientsController {
   }
 
   @Get('search')
+  @UseGuards(EspecialistaGuard)
   @ApiOperation({
     summary: 'Search pacients by name',
     description: 'Search pacients by name for current specialist',
@@ -87,6 +90,7 @@ export class PacientsController {
   }
 
   @Delete(':id')
+  @UseGuards(EspecialistaGuard)
   @ApiOperation({
     summary: 'Delete a pacient',
     description: 'Delete a specific pacient belonging to current specialist',
@@ -105,6 +109,7 @@ export class PacientsController {
   }
 
   @Put(':id')
+  @UseGuards(EspecialistaGuard)
   @ApiOperation({
     summary: 'Update a pacient',
     description:
@@ -137,6 +142,7 @@ export class PacientsController {
   }
 
   @Get(':id')
+  @UseGuards(EspecialistaGuard)
   @ApiOperation({
     summary: 'Get pacient by ID',
     description: 'Returns detailed information about a specific pacient',
