@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/AuthConext";
 import { Stack } from "expo-router";
 
 const HomeLayoutContent = () => {
@@ -17,23 +18,18 @@ const HomeLayoutContent = () => {
       }}
     >
       <Stack.Screen
-        name="index"
+        name="recipeDetail"
         options={{ title: "Index", headerShown: false}}
-      />
-      <Stack.Screen
-        name="updateProfile"
-        options={{ title: "Actualizar datos", headerShown: false}}
-      />
-      <Stack.Screen
-        name="updatePassword"
-        options={{ title: "Actualizar contraseña", headerShown: false}}
       />
     </Stack>
   );
 };
 
 const HomeLayout = () => {
-  return <HomeLayoutContent />;
+  return (
+  <AuthProvider>
+    <HomeLayoutContent />
+  </AuthProvider>)
 };
 
 export default HomeLayout;

@@ -4,9 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthConext";
 
 const ProfileModule = () => {
   const router = useRouter();
+  const {logout} = useAuth()
 
   const user = {
     name: "Juan Carlos Mendoza",
@@ -16,15 +18,8 @@ const ProfileModule = () => {
   };
 
   const handleLogout = () => {
+    logout()
     router.push("/(auth)/login");
-  };
-
-  const handleUpdateProfile = () => {
-    router.push("/updateProfile");
-  };
-
-  const handleUpdatePassword = () => {
-    router.push("/updatePassword");
   };
 
   return (
@@ -48,14 +43,6 @@ const ProfileModule = () => {
             <Text style={styles.value}>{user.peso}</Text>
           </View>
         </View>
-
-        <Pressable style={styles.updateButton} onPress={handleUpdateProfile}>
-          <Text style={styles.updateText}>Actualizar datos</Text>
-        </Pressable>
-
-        <Pressable style={styles.updateButton} onPress={handleUpdatePassword}>
-          <Text style={styles.updateText}>Cambiar contraseña</Text>
-        </Pressable>
 
         <Pressable style={styles.logoutButton} onPress={handleLogout}>
           <AntDesign name="logout" size={20} color="white" />

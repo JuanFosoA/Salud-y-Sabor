@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import { View, Text, StatusBar, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "@/components/molecules/SearchBar";
@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
 import SimpleCard from "@/components/atoms/SimpleCard";
 import CategoriesSection from "@/components/molecules/CategoriesSection";
+import RecipeDetail from "@/app/recipe/recipeDetail";
 
 const IndexModule = () => {
   const [search, setSearch] = useState("");
@@ -14,9 +15,13 @@ const IndexModule = () => {
     router.push("/(tabs)/search");
   };
 
+  const goToMyRecipes = () => {
+    router.push("/recipe/recipeDetail"); 
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
-      <StatusBar barStyle={"dark-content"} />
+      <StatusBar barStyle={"light-content"} />
       <View style={styles.horizontalContainer}>
         <View style={{ maxWidth: 100, flex: 1 }}>
           <SaludSaborTitle color="#000" fontSize={20} />
@@ -33,16 +38,13 @@ const IndexModule = () => {
 
       <View style={styles.cardsWrapper}>
         <View style={styles.horizontalCards}>
-          <SimpleCard
-            title="Mis recetas"
-            imageName="https://media.istockphoto.com/id/1290306471/es/foto/anillos-de-ma%C3%ADz-coloridos-en-cuenco-aislados-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=gI5clA4HTZ76Lz-3-6QZahVxFdPM2CTNG6bkSvoYqNM="
-            style={styles.card}
-          />
-          <SimpleCard
-            title="Recomendaciones"
-            imageName="https://media.istockphoto.com/id/1290306471/es/foto/anillos-de-ma%C3%ADz-coloridos-en-cuenco-aislados-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=gI5clA4HTZ76Lz-3-6QZahVxFdPM2CTNG6bkSvoYqNM="
-            style={styles.card}
-          />
+          <Pressable onPress={goToMyRecipes}>
+            <SimpleCard 
+              title="Mis recetas"
+              imageName="https://media.istockphoto.com/id/1290306471/es/foto/anillos-de-ma%C3%ADz-coloridos-en-cuenco-aislados-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=gI5clA4HTZ76Lz-3-6QZahVxFdPM2CTNG6bkSvoYqNM="
+              style={styles.card}
+            />
+          </Pressable>
         </View>
         {/* <DetailedCard ... /> */}
         <Text>Categorías</Text>
@@ -64,12 +66,11 @@ const styles = StyleSheet.create({
   },
   cardsWrapper: {
     width: "100%",
-    justifyContent:'center',
+    justifyContent: "center",
     marginTop: 120,
   },
   horizontalCards: {
     flexDirection: "row",
-    gap: 12,
     marginTop: 32,
     marginBottom: 32,
     justifyContent: "center",
@@ -78,8 +79,9 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   card: {
-    flex: 1,
-    minWidth: 150,
+    width: 150,
+    height: 200,
+    alignSelf: "center",
   },
   container: {
     alignItems: "center",

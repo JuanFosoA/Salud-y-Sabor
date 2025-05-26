@@ -3,16 +3,16 @@ import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 
 interface DetailedCardProps {
-  title: string
-  author: string
+  name: string
+  createdAt: string
   imageName: string
   isFavorite?: boolean
   onToggleFavorite?: () => void
 }
 
 const DetailedCard: React.FC<DetailedCardProps> = ({
-    title,
-    author,
+    name,
+    createdAt,
     imageName,
     isFavorite = false,
     onToggleFavorite,
@@ -22,12 +22,9 @@ const DetailedCard: React.FC<DetailedCardProps> = ({
       <Image source={{ uri: imageName }} style={styles.image} resizeMode="cover" />
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.author}>{author}</Text>
+          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.author}>{createdAt}</Text>
         </View>
-        <TouchableOpacity style={styles.favoriteButton} onPress={onToggleFavorite}>
-          <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? "#FF3B30" : "#000"} />
-        </TouchableOpacity>
       </View>
     </View>
   )

@@ -1,5 +1,7 @@
 import SaludSaborTitle from "@/components/atoms/SaludSaborTitle";
 import SvgTop from "@/components/atoms/SvgTop";
+import { useAuth } from "@/context/AuthConext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -15,6 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const LoginModule = () => {
+  const { login_AuthContext } = useAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -34,13 +37,18 @@ const LoginModule = () => {
       const token = response.headers.get("authorization")?.replace("Bearer ", "");
       const data = await response.json();
 
+      console.log("data en login: ",data);
+      
+
       if (!response.ok || !token) {
         Alert.alert("Error", data.message || "Credenciales incorrectas");
         return;
       }
-
+      console.log("Token en login: ",token);
+      
       Alert.alert("Éxito", "Sesión iniciada");
-      // Aquí puedes guardar el token si es necesario, por ejemplo en AsyncStorage
+      await AsyncStorage.setItem("@myToken", token);
+      await login_AuthContext();
       router.replace("/(tabs)");
     } catch (error) {
       console.error(error);
