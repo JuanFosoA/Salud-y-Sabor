@@ -1,18 +1,9 @@
 //app/(auth)/_layout
 
-import { View, Text, ActivityIndicator } from "react-native";
 import React from "react";
-import { Redirect, Stack } from "expo-router";
-import { useAuth } from "@/context/AuthConext";
+import { Stack } from "expo-router";
 
 const AuthLayout = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-  if (isAuthenticated) {
-    return <Redirect href="/" />;
-  }
   return (
     <Stack
       screenOptions={{

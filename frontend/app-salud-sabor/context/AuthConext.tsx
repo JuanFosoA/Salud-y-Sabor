@@ -36,15 +36,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = await AsyncStorage.getItem("@myToken");
 
       if (token) {
-        const isValid = await validateToken(token);
-        console.log("¿Token válido?:", isValid);
-        if (isValid) {
           setIsAuthenticated(true);
-        } else {
-          await AsyncStorage.removeItem("@myToken"); // elimina token inválido
-          setIsAuthenticated(false);
-        }
-      } 
+        
+      } else{
+        setIsAuthenticated(false);
+      }
+      setIsLoading(false);
     };
 
     checkAuthStatus();

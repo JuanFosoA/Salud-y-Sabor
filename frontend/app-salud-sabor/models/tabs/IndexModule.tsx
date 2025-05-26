@@ -15,7 +15,7 @@ const IndexModule = () => {
   };
 
   const goToMyRecipes = () => {
-    router.push("/recipe/recipe"); 
+    router.push("/(tabs)/(recipeScreens)/recipe"); 
   };
 
   return (

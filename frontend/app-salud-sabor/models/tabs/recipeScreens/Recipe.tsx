@@ -73,10 +73,7 @@ const RecipeModel = () => {
   }, []);
 
   const getRecipeDetail = (id: string) => {
-    router.push({
-      pathname: "/recipe/[id]",
-      params: { id: id.toString() },
-    });
+    router.push(`/(tabs)/(recipeScreens)/${id}`);
   };
 
   if (loading) {
@@ -116,7 +113,7 @@ const RecipeModel = () => {
         </View>
       </View>
       <View style={styles.sectionTitle}>
-        <Text>Mis recetas</Text>
+        <Text style={{fontSize:30}}>Mis recetas</Text>
       </View>
       {/* Lista de recetas */}
       <FlatList
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
     color: "red",
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "600",
     color: "#333",
     textAlign: "center",

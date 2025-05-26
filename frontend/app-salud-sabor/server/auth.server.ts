@@ -6,7 +6,7 @@ export const login = async (email: string, password: string) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: email,
+        email: email,
         password: password 
         }),
     });

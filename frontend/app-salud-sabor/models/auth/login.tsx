@@ -84,10 +84,6 @@ const LoginModule = () => {
         <Pressable style={styles.loginButton} onPress={login}>
           <Text style={styles.loginText}>Iniciar Sesión</Text>
         </Pressable>
-
-        <Pressable>
-          <Text style={styles.forgotPassword}>¿Olvidaste la contraseña?</Text>
-        </Pressable>
       </View>
     </SafeAreaView>
   );

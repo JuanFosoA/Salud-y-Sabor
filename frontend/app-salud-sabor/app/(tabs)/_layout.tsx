@@ -7,26 +7,11 @@ import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthConext";
 
 const TabLayout = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#007bff" />
-      </View>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Redirect href="/login" />;
-  }
-
   return (
     <Tabs>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="home" size={24} color="black" />
           ),
@@ -50,6 +35,13 @@ const TabLayout = () => {
           tabBarIcon: ({ color }) => (
             <FontAwesome name="gear" size={24} color="black" />
           ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="(recipeScreens)"
+        options={{
+          href: null, 
           headerShown: false,
         }}
       />
