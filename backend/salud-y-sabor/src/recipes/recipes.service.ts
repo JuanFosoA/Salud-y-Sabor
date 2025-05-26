@@ -10,7 +10,7 @@ import {
   StorageFolder,
   StorageService,
 } from 'src/shared/storage/storage.service';
-import { Recipe } from './recipes.entity';
+import { Recipe, RecipeCategory } from './recipes.entity';
 import { CreateRecipeDto } from './dto/CreateRecipe.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, ILike, Repository } from 'typeorm';
@@ -145,6 +145,51 @@ export class RecipesService {
       const userId = this.getUserIdFromToken(request);
       queryOptions.where = { pacients: { id: userId } };
     }
+
+    return this.recipeRepository.find(queryOptions);
+  }
+  // Recetas por categoria
+
+  async getRecipesByCategory(
+    request: Request,
+    category: RecipeCategory,
+    skip: number = 0,
+    take: number = 10,
+  ): Promise<Recipe[]> {
+    const role = await this.extractUserRole(request);
+    const userId = this.getUserIdFromToken(request);
+
+    const baseWhere: any = { category };
+
+    // Si el usuario es ROLE_USER, filtra también por paciente
+    if (role === Role.ROLE_USER) {
+      baseWhere.pacients = { id: userId };
+    }
+
+    const queryOptions: FindManyOptions<Recipe> = {
+      skip,
+      take,
+      order: { createdAt: 'DESC' },
+      relations: {
+        menus: true,
+        pacients: false,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        ingredients: true,
+        category: true,
+        imageName: true,
+        createdAt: true,
+        updatedAt: true,
+        menus: {
+          id: true,
+          name: true,
+        },
+      },
+      where: baseWhere,
+    };
 
     return this.recipeRepository.find(queryOptions);
   }

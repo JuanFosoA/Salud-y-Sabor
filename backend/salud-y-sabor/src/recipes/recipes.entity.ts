@@ -17,6 +17,9 @@ export enum RecipeCategory {
   GLUTEN_FREE = 'gluten_free',
   DAIRY_FREE = 'dairy_free',
   OTHER = 'other',
+  BREAKFAST = 'Breakfast',
+  LUNCH = 'Lunch',
+  DINNER = 'Dinner',
 }
 
 @Entity({ name: 'recipes' })
