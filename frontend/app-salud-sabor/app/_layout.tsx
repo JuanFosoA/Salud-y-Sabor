@@ -1,6 +1,4 @@
-import { Stack, useRouter } from "expo-router";
-import { Suspense, useEffect } from "react";
-import { ActivityIndicator } from "react-native";
+import { Stack } from "expo-router";
 
 const HomeLayoutContent = () => {
   return (
