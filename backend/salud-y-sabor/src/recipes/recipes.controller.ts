@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseEnumPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -20,6 +23,7 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
 import * as request from 'supertest';
+import { Recipe, RecipeCategory } from './recipes.entity';
 
 @Controller('recipes')
 export class RecipesController {
@@ -78,5 +82,21 @@ export class RecipesController {
   @UseGuards(EspecialistaGuard)
   remove(@Param('id') id: number) {
     return this.recipeService.deleteRecipe(+id);
+  }
+
+  @Get('category/:category')
+  async getByCategory(
+    @Req() request: Request,
+    @Param('category', new ParseEnumPipe(RecipeCategory))
+    category: RecipeCategory,
+    @Query('skip', new DefaultValuePipe(0), ParseIntPipe) skip: number,
+    @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
+  ): Promise<Recipe[]> {
+    return this.recipeService.getRecipesByCategory(
+      request,
+      category,
+      skip,
+      take,
+    );
   }
 }

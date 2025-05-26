@@ -142,7 +142,7 @@ export class PacientsController {
   }
 
   @Get(':id')
-  @UseGuards(EspecialistaGuard)
+  @UseGuards(AuthGuard)
   @ApiOperation({
     summary: 'Get pacient by ID',
     description: 'Returns detailed information about a specific pacient',
