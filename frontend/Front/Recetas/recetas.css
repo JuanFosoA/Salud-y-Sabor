@@ -1,0 +1,398 @@
+/* Paleta personalizada:
+   - Degradado principal: de naranja (#f39c12) a gris oscuro (#2c3e50)
+   - Acento extra: blanco (#ffffff)
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #f5f5f5;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.sidebar {
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  background: linear-gradient(45deg, #f39c12, #2c3e50);
+  overflow-x: hidden;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.sidebar ul li {
+  width: 100%;
+  list-style: none;
+}
+
+.sidebar ul li:hover {
+  background: #ffffff;
+}
+
+.sidebar ul li:first-child {
+  line-height: 60px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #fff;
+}
+
+.sidebar ul li:first-child:hover {
+  background: none;
+}
+
+.sidebar ul li a {
+  width: 100%;
+  text-decoration: none;
+  color: #fff;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar ul li:hover a {
+  color: #2c3e50;
+}
+
+.sidebar ul li a i {
+  min-width: 60px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.sidebar .title {
+  padding: 0 10px;
+  font-size: 20px;
+  border-bottom: 2px solid #ffffff;
+}
+
+.main {
+  position: absolute;
+  width: calc(100% - 300px);
+  min-height: 100vh;
+  left: 300px;
+  background: #f5f5f5;
+}
+
+.top-bar {
+  position: fixed;
+  height: 60px;
+  width: calc(100% - 300px);
+  background: #ffffff;
+  display: grid;
+  grid-template-columns: 10fr 0.4fr 1fr;
+  grid-gap: 5px;
+  align-items: center;
+  color: #444;
+  padding: 0 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.top-bar .search {
+  position: relative;
+  max-width: 400px;
+}
+
+.search input {
+  width: 100%;
+  min-width: 128px;
+  height: 40px;
+  padding: 0 40px;
+  font-size: 16px;
+  outline: none;
+  border: none;
+  background: #f5f5f5;
+}
+
+.search i {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.cards {
+  margin-top: 60px;
+  width: 100%;
+  padding: 35px 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+
+.cards .card {
+  background: linear-gradient(45deg, #f39c12, #2c3e50);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+.number {
+  font-size: 35px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.card-name {
+  color: #fff;
+  font-weight: 600;
+}
+
+.icon-box i {
+  font-size: 45px;
+  color: #fff;
+}
+
+.heading {
+  position: relative;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.btn, .create-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #f39c12, #2c3e50);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover, .create-btn:hover {
+  background: linear-gradient(45deg, #2c3e50, #f39c12);
+}
+
+.btn i {
+  font-size: 16px;
+}
+
+table {
+  margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead td {
+  font-weight: 600;
+  color: #333;
+}
+
+table tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+tbody tr:hover {
+  background: #444;
+  color: #fff;
+}
+
+table tbody tr:last-child {
+  border-bottom: none;
+}
+
+td {
+  padding: 9px 5px;
+}
+
+td:first-child {
+  padding-left: 15px;
+}
+
+td i {
+  padding: 7px;
+  color: #fff;
+  border-radius: 50px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.fa-eye {
+  background: #2980b9;
+}
+
+.fa-edit {
+  background: #27ae60;
+}
+
+.fa-trash-alt {
+  background: #e74c3c;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content form label {
+  margin-bottom: 5px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.modal-content form input[type="text"],
+.modal-content form input[type="file"],
+.modal-content form textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.delete-btn-modal {
+  background: #e74c3c;
+  color: #fff;
+  margin-top: 10px;
+  border: none;
+}
+
+.delete-btn-modal:hover {
+  background: #c0392b;
+}
+
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-btn {
+  background: linear-gradient(45deg, #f39c12, #2c3e50);
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(45deg, #2c3e50, #f39c12);
+}
+
+.cancel-btn {
+  background: #ccc;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #bbb;
+}
+
+/* Para hacer el botón .delete-btn-modal un poco más pequeño */
+.delete-btn-modal {
+  background: #e74c3c;
+  color: #fff;
+  margin-top: 10px;
+  border: none;
+  padding: 10px 18px;  /* Reducido */
+  font-size: 16px;      /* Tamaño de fuente más pequeño */
+  line-height: 1.3;     /* Ligero ajuste en el espacio vertical */
+  border-radius: 4px;   /* Bordes un poco menos redondeados */
+  white-space: normal;  /* Permite saltos de línea automáticos */
+  text-align: center;   /* Centra el texto */
+}
+
+.delete-btn-modal:hover {
+  background: #c0392b;
+}
+
+/* Botones Crear Receta y Actualizar Receta centrados */
+.btn, .create-btn {
+  display: flex; /* Asegura uso de flexbox para alinear */
+  align-items: center; /* Centrado vertical */
+  justify-content: center; /* Centrado horizontal */
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #f39c12, #2c3e50);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-align: center; /* Asegura que el texto se centre si se rompe línea */
+}
+
+.btn:hover, .create-btn:hover {
+  background: linear-gradient(45deg, #2c3e50, #f39c12);
+}
+
+.btn i {
+  font-size: 16px;
+}
