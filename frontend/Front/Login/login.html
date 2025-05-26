@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Login – Salud & Sabor</title>
   <link rel="stylesheet" href="login.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -11,16 +11,59 @@
   <div class="login-container">
     <div class="login-card">
       <h2>Iniciar Sesión</h2>
-      <form action="#" method="post">
-        <label for="username">Usuario</label>
-        <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
+      <form id="loginForm">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" required>
         
         <label for="password">Contraseña</label>
-        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+        <input type="password" id="password" name="password" required>
         
         <button type="submit">Entrar</button>
       </form>
+      <p id="errorMsg" style="color: red; display: none; margin-top: 1rem;"></p>
     </div>
   </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+
+      const email    = this.email.value.trim();
+      const password = this.password.value;
+
+      if (!email || !password) {
+        errorMsg.textContent = 'Por favor, ingrese email y contraseña.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('https://zzzbuilds-server.lat/auth/signin/specialist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message || 'Credenciales inválidas');
+        }
+
+        // Guardamos el token
+        localStorage.setItem('bearerToken', json.access_token);
+
+        // Redirigimos al dashboard de pacientes (servido desde un servidor estático)
+        window.location.href = '/pacientes.html';
+
+      } catch (err) {
+        errorMsg.textContent = err.message.includes('Failed to fetch')
+          ? 'No se pudo conectar al servidor.'
+          : err.message;
+        errorMsg.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>

@@ -91,3 +91,18 @@ body {
   color: #2c3e50;
   white-space: pre-wrap;
 }
+
+/* Igualar estilos de email a los de texto y password */
+.login-card input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.login-card input[type="email"]:focus {
+  border-color: #f39c12;
+  outline: none;
+}
