@@ -5,78 +5,57 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="pacientes.css" />
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" 
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" 
-        crossorigin="anonymous" />
-  <title>Dashboard admin</title>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous" />
+  <title>Dashboard admin - Pacientes</title>
 </head>
 <body>
   <div class="container">
+    <!-- Sidebar -->
     <div class="sidebar">
       <ul>
-        <li>
-          <a href="#">
-            <i class="fas fa-grin-tongue-wink"></i>
-            <div class="title">Salud & Sabor</div>
-          </a>
-        </li>
-        <li>
-          <a href="../Recetas/recetas.html">
-            <i class="fas fa-hat-chef"></i>
-            <div class="title">Recetas</div>
-          </a>
-        </li>
-        <li>
-          <a href="../Menús/menus.html">
-            <i class="fas fa-clipboard-list"></i>
-            <div class="title">Menús</div>
-          </a>
-        </li>
-        <li>
-          <a href="../Pacientes/pacientes.html">
-            <i class="fas fa-book-user"></i>
-            <div class="title">Pacientes</div>
-          </a>
-        </li>
+        <li><a href="#"><i class="fas fa-grin-tongue-wink"></i><div class="title">Salud & Sabor</div></a></li>
+        <li><a href="../Recetas/recetas.html"><i class="fas fa-hat-chef"></i><div class="title">Recetas</div></a></li>
+        <li><a href="../Menús/menus.html"><i class="fas fa-clipboard-list"></i><div class="title">Menús</div></a></li>
+        <li><a href="../Pacientes/pacientes.html"><i class="fas fa-book-user"></i><div class="title">Pacientes</div></a></li>
       </ul>
     </div>
+
+    <!-- Main -->
     <div class="main">
       <div class="top-bar">
         <div class="search">
-          <input type="text" name="search" placeholder="Buscar Paciente" />
-          <label for="search">
-            <i class="fas fa-search"></i>
-          </label>
+          <input type="text" name="search" placeholder="Buscar aquí" />
+          <label for="search"><i class="fas fa-search"></i></label>
         </div>
-        <i class="fas fa-bell"></i>
         <div class="fas fa-user"></div>
       </div>
-      <div class="cards">
-        <!-- Tarjetas, si las hubiera -->
-      </div>
+
+      <div class="cards"></div>
+
       <div class="tables">
         <div class="last-appointments">
           <div class="heading">
             <h2>&nbsp;&nbsp;Pacientes</h2>
-            <a href="#" class="btn" id="addBtn">
-              <i class="fas fa-plus"></i>
-              <span>Add</span>
-            </a>
+            <a href="#" class="btn" id="addBtn"><i class="fas fa-plus"></i><span>Add</span></a>
           </div>
           <table class="appointments">
             <thead>
               <tr>
-                <td>Nombre</td>
-                <td>Doctor</td>
-                <td>Condición</td>
-                <td>Acciones</td>
+                <td>Nombre Completo</td>
+                <td>Documento</td>
+                <td>Email</td>
+                <td>Usuario</td>
+                <td>Enfermedad</td>
+                <td>Actions</td>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="patientTableBody">
               <tr data-id="1">
-                <td>Liam Smith Doe</td>
-                <td>Dr. Benjamin</td>
-                <td>fracture</td>
+                <td>Jane Doe</td>
+                <td>CC 12345678</td>
+                <td>jane@example.com</td>
+                <td>janedoe</td>
+                <td>Diabetes</td>
                 <td>
                   <i class="far fa-eye"></i>
                   <i class="far fa-edit edit-btn"></i>
@@ -90,50 +69,115 @@
     </div>
   </div>
 
-  <!-- Modal para Crear/Editar Paciente -->
-  <div id="patientModal" class="modal">
+  <!-- Modal Crear Paciente -->
+  <div id="createModal" class="modal">
     <div class="modal-content">
-      <span class="close" id="patientModalClose">&times;</span>
-      <h2 id="modalTitle">Crear Nuevo Paciente</h2>
-      <form id="patientForm">
+      <span class="close" id="createModalClose">&times;</span>
+      <h2>Crear Nuevo Paciente</h2>
+      <form id="createForm">
         <label for="fullname">Nombre completo:</label>
         <input type="text" id="fullname" name="fullname" required>
-        
+
         <label for="documentType">Tipo de documento:</label>
-        <input type="text" id="documentType" name="documentType" required>
-        
+        <select id="documentType" name="documentType" required>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="CE">Cédula de Extranjería</option>
+        </select>
+
         <label for="document">Documento:</label>
         <input type="text" id="document" name="document" required>
-        
+
         <label for="email">Correo electrónico:</label>
         <input type="email" id="email" name="email" required>
-        
+
         <label for="username">Nombre de usuario:</label>
         <input type="text" id="username" name="username" required>
 
         <label for="historialMedico">Historial Médico:</label>
         <input type="file" id="historialMedico" name="historialMedico" accept=".pdf,.doc,.docx,.txt">
-        
+
         <label for="height">Estatura (cm):</label>
         <input type="number" id="height" name="height" step="0.01" placeholder="Ingrese estatura">
-        
+
         <label for="weight">Peso (kg):</label>
         <input type="number" id="weight" name="weight" step="0.01" placeholder="Ingrese peso">
-        
+
         <label for="disease">Enfermedad:</label>
-        <input type="text" id="disease" name="disease" required>
-        
+        <select id="disease" name="disease" required>
+          <option value="">Seleccione una enfermedad</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Hipertensión">Hipertensión</option>
+          <option value="Asma">Asma</option>
+        </select>
+
         <label for="observaciones">Observaciones:</label>
         <textarea id="observaciones" name="observaciones" rows="3" placeholder="Ingrese observaciones"></textarea>
-        
-        <button type="submit" class="create-btn" id="submitBtn">Crear Paciente</button>
-        <!-- Botón de eliminación en modo edición, oculto por defecto -->
-        <button type="button" class="delete-btn-modal" id="deleteBtnModal" style="display: none;">Eliminar Paciente</button>
+
+        <button type="submit" class="create-btn">Crear Paciente</button>
       </form>
     </div>
   </div>
 
-  <!-- Modal de confirmación para eliminación desde la tabla -->
+  <!-- Modal Editar Paciente -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="editModalClose">&times;</span>
+      <h2>Editar Paciente</h2>
+      <form id="editForm">
+        <label for="edit_fullname">Nombre completo:</label>
+        <input type="text" id="edit_fullname" name="fullname" required>
+
+        <label for="edit_documentType">Tipo de documento:</label>
+        <select id="edit_documentType" name="documentType" required>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="CE">Cédula de Extranjería</option>
+        </select>
+
+        <label for="edit_document">Documento:</label>
+        <input type="text" id="edit_document" name="document" required>
+
+        <label for="edit_email">Correo electrónico:</label>
+        <input type="email" id="edit_email" name="email" required>
+
+        <label for="edit_username">Nombre de usuario:</label>
+        <input type="text" id="edit_username" name="username" required>
+
+        <label for="edit_historialMedico">Historial Médico:</label>
+        <input type="file" id="edit_historialMedico" name="historialMedico" accept=".pdf,.doc,.docx,.txt">
+
+        <label for="edit_height">Estatura (cm):</label>
+        <input type="number" id="edit_height" name="height" step="0.01" placeholder="Ingrese estatura">
+
+        <label for="edit_weight">Peso (kg):</label>
+        <input type="number" id="edit_weight" name="weight" step="0.01" placeholder="Ingrese peso">
+
+        <label for="edit_disease">Enfermedad:</label>
+        <select id="edit_disease" name="disease" required>
+          <option value="">Seleccione una enfermedad</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Hipertensión">Hipertensión</option>
+          <option value="Asma">Asma</option>
+        </select>
+
+        <label for="edit_observaciones">Observaciones:</label>
+        <textarea id="edit_observaciones" name="observaciones" rows="3" placeholder="Ingrese observaciones"></textarea>
+
+        <!-- extras en editar: menus y recetas -->
+        <label for="edit_menuIds">Menús (IDs separados por coma):</label>
+        <input type="text" id="edit_menuIds" name="menuIds" placeholder="Ej: 1,2,5">
+
+        <label for="edit_recetaIds">Recetas (IDs separados por coma):</label>
+        <input type="text" id="edit_recetaIds" name="recetaIds" placeholder="Ej: 3,4,7">
+
+        <button type="submit" class="create-btn">Actualizar Paciente</button>
+        <button type="button" class="delete-btn-modal">Eliminar Paciente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- deleteModal -->
   <div id="deleteModal" class="modal">
     <div class="modal-content">
       <span class="close" id="deleteModalClose">&times;</span>
@@ -145,95 +189,29 @@
     </div>
   </div>
 
-  <!-- Script para controlar los modales -->
   <script>
-    // Modal para crear / editar paciente
-    const patientModal = document.getElementById("patientModal");
-    const addBtn = document.getElementById("addBtn");
-    const patientModalClose = document.getElementById("patientModalClose");
-    const modalTitle = document.getElementById("modalTitle");
-    const submitBtn = document.getElementById("submitBtn");
-    const deleteBtnModal = document.getElementById("deleteBtnModal");
-    const patientForm = document.getElementById("patientForm");
+    // Abrir modals
+    document.getElementById('addBtn').onclick = e => { e.preventDefault(); document.getElementById('createModal').style.display='block'; };
+    document.getElementById('createModalClose').onclick = () => document.getElementById('createModal').style.display='none';
+    document.getElementById('editModalClose').onclick = () => document.getElementById('editModal').style.display='none';
 
-    // Abrir modal en modo creación
-    addBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      modalTitle.textContent = "Crear Nuevo Paciente";
-      submitBtn.textContent = "Crear Paciente";
-      deleteBtnModal.style.display = "none";
-      patientForm.reset();
-      patientModal.style.display = "block";
-    });
-
-    // Cerrar modal de crear/editar
-    patientModalClose.addEventListener("click", function() {
-      patientModal.style.display = "none";
-    });
-
-    // Abrir modal en modo edición al hacer clic en el ícono de editar
-    const editBtns = document.querySelectorAll('.edit-btn');
-    editBtns.forEach(btn => {
-      btn.addEventListener("click", function(e) {
-        e.preventDefault();
-        const row = this.closest("tr");
-        // Simulación: obtener algunos datos básicos (puedes extender esto si cuentas con más información)
-        const fullname = row.cells[0].textContent;
-        modalTitle.textContent = "Editar Paciente";
-        submitBtn.textContent = "Actualizar Paciente";
-        deleteBtnModal.style.display = "inline-block";
-        document.getElementById("fullname").value = fullname;
-        // Para los demás campos, se recomienda realizar una consulta (fetch o axios)
-        // que obtenga la información completa del paciente a partir del id: row.dataset.id
-        patientModal.style.display = "block";
-      });
-    });
-
-    // Manejo del botón de eliminación en el modal de edición
-    deleteBtnModal.addEventListener("click", function() {
-      if (confirm("¿Seguro que desea eliminar este paciente?")) {
-        // Lógica para llamada al backend
-        alert("Paciente eliminado");
-        patientModal.style.display = "none";
+    // Delegar tabla
+    document.getElementById('patientTableBody').onclick = e => {
+      if(e.target.classList.contains('edit-btn')){
+        const cells = e.target.closest('tr').cells;
+        document.getElementById('edit_fullname').value = cells[0].textContent;
+        document.getElementById('edit_document').value = cells[1].textContent.split(' ')[1];
+        document.getElementById('edit_email').value = cells[2].textContent;
+        document.getElementById('edit_username').value = cells[3].textContent;
+        document.getElementById('edit_disease').value = cells[4].textContent;
+        document.getElementById('editModal').style.display='block';
       }
-    });
-
-    // Modal de confirmación para eliminación desde la tabla
-    const deleteModal = document.getElementById("deleteModal");
-    const deleteModalClose = document.getElementById("deleteModalClose");
-    const cancelDelete = document.getElementById("cancelDelete");
-    const acceptDelete = document.getElementById("acceptDelete");
-    
-    // Asignar evento a cada botón de eliminación de la tabla
-    const deleteBtns = document.querySelectorAll('.delete-btn');
-    deleteBtns.forEach(btn => {
-      btn.addEventListener("click", function(e) {
-        e.preventDefault();
-        deleteModal.style.display = "block";
-      });
-    });
-
-    deleteModalClose.addEventListener("click", function() {
-      deleteModal.style.display = "none";
-    });
-    cancelDelete.addEventListener("click", function() {
-      deleteModal.style.display = "none";
-    });
-    acceptDelete.addEventListener("click", function() {
-      // Lógica de eliminación del paciente
-      alert("Paciente eliminado");
-      deleteModal.style.display = "none";
-    });
-
-    // Cerrar modal al hacer clic fuera de él
-    window.addEventListener("click", function(e) {
-      if (e.target === patientModal) {
-        patientModal.style.display = "none";
+      if(e.target.classList.contains('delete-btn')){
+        document.getElementById('deleteModal').style.display='block';
       }
-      if (e.target === deleteModal) {
-        deleteModal.style.display = "none";
-      }
-    });
+    };
+
+    // Aquí agregar submit y delete handlers...
   </script>
 </body>
 </html>

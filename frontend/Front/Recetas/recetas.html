@@ -13,18 +13,10 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <ul>
-        <li>
-          <a href="#"><i class="fas fa-grin-tongue-wink"></i><div class="title">Salud & Sabor</div></a>
-        </li>
-        <li>
-          <a href="../Recetas/recetas.html"><i class="fas fa-hat-chef"></i><div class="title">Recetas</div></a>
-        </li>
-        <li>
-          <a href="../Menús/menus.html"><i class="fas fa-clipboard-list"></i><div class="title">Menús</div></a>
-        </li>
-        <li>
-          <a href="../Pacientes/pacientes.html"><i class="fas fa-book-user"></i><div class="title">Pacientes</div></a>
-        </li>
+        <li><a href="#"><i class="fas fa-grin-tongue-wink"></i><div class="title">Salud & Sabor</div></a></li>
+        <li><a href="../Recetas/recetas.html"><i class="fas fa-hat-chef"></i><div class="title">Recetas</div></a></li>
+        <li><a href="../Menús/menus.html"><i class="fas fa-clipboard-list"></i><div class="title">Menús</div></a></li>
+        <li><a href="../Pacientes/pacientes.html"><i class="fas fa-book-user"></i><div class="title">Pacientes</div></a></li>
       </ul>
     </div>
 
@@ -32,10 +24,9 @@
     <div class="main">
       <div class="top-bar">
         <div class="search">
-          <input type="text" placeholder="Buscar receta." />
+          <input type="text" placeholder="Buscar receta..." />
           <label><i class="fas fa-search"></i></label>
         </div>
-        <i class="fas fa-bell"></i>
         <div class="fas fa-user"></div>
       </div>
 
@@ -45,9 +36,7 @@
         <div class="last-appointments">
           <div class="heading">
             <h2>&nbsp;&nbsp;Recetas</h2>
-            <a href="#" class="btn" id="addRecipeBtn">
-              <i class="fas fa-plus"></i><span>Add</span>
-            </a>
+            <a href="#" class="btn" id="addRecipeBtn"><i class="fas fa-plus"></i><span>Add</span></a>
           </div>
           <table class="appointments">
             <thead>
@@ -76,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Modal para Crear/Editar Receta -->
+  <!-- Modal Crear/Editar Receta -->
   <div id="recipeModal" class="modal">
     <div class="modal-content">
       <span class="close" id="recipeModalClose">&times;</span>
@@ -88,8 +77,8 @@
         <label for="recipeName">Nombre de la Receta:</label>
         <input type="text" id="recipeName" name="recipeName" required>
 
-        <label for="recipeIngredients">Ingredientes:</label>
-        <textarea id="recipeIngredients" name="recipeIngredients" rows="3" required></textarea>
+        <label for="recipeIngredients">Ingredientes (separados por coma):</label>
+        <input type="text" id="recipeIngredients" name="recipeIngredients" placeholder="Ej: Avena,Leche,Banana" required>
 
         <label for="recipeDescription">Descripción:</label>
         <textarea id="recipeDescription" name="recipeDescription" rows="4"></textarea>
@@ -115,7 +104,6 @@
     </div>
   </div>
 
-  <!-- Script para interacciones -->
   <script>
     const recipeModal = document.getElementById("recipeModal");
     const addRecipeBtn = document.getElementById("addRecipeBtn");
@@ -129,7 +117,6 @@
     const deleteModalClose = document.getElementById("deleteModalClose");
     const acceptDelete = document.getElementById("acceptDelete");
     const cancelDelete = document.getElementById("cancelDelete");
-
     let selectedRow = null;
 
     // Crear receta
@@ -152,25 +139,44 @@
       if (e.target === deleteModal) deleteModal.style.display = "none";
     });
 
-    // Acción editar
+    // Editar receta
     recipeTableBody.addEventListener("click", function(e) {
       if (e.target.classList.contains("edit-btn")) {
         selectedRow = e.target.closest("tr");
         const [cat, name, ing] = selectedRow.children;
         document.getElementById("recipeCategory").value = cat.textContent;
         document.getElementById("recipeName").value = name.textContent;
+        // Al editar, 'recipeIngredients' sigue recibiendo coma-separated list
         document.getElementById("recipeIngredients").value = ing.textContent;
         modalTitle.textContent = "Editar Receta";
         submitRecipeBtn.textContent =  "Actualizar Receta";
         deleteRecipeBtn.style.display = "block";
         recipeModal.style.display = "block";
       }
-
-      // Acción eliminar
       if (e.target.classList.contains("delete-btn")) {
         selectedRow = e.target.closest("tr");
         deleteModal.style.display = "block";
       }
+    });
+
+    // Enviar form como JSON con array de ingredientes
+    recipeForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = new FormData(recipeForm);
+      const ingredientsArray = formData.get("recipeIngredients")
+        .split(",")
+        .map(item => item.trim())
+        .filter(item => item);
+      const payload = {
+        category: formData.get("recipeCategory"),
+        name: formData.get("recipeName"),
+        ingredients: ingredientsArray,
+        description: formData.get("recipeDescription") || null,
+        image: formData.get("recipeImage")?.name || null
+      };
+      console.log("Payload JSON:", JSON.stringify(payload, null, 2));
+      // Aquí tu llamada fetch/axios
+      recipeModal.style.display = "none";
     });
 
     // Confirmar eliminación

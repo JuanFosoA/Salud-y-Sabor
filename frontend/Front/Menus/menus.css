@@ -286,25 +286,20 @@ td i {
   flex-direction: column;
 }
 
-/* Espaciado actualizado para el formulario */
 .modal-content form label {
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #2c3e50;
   font-weight: 500;
-  display: block;
 }
 
 .modal-content form input[type="text"],
 .modal-content form input[type="file"],
-.modal-content form input[type="email"],
-.modal-content form input[type="number"],
 .modal-content form textarea {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  width: 100%;
 }
 
 .delete-btn-modal {
@@ -312,12 +307,6 @@ td i {
   color: #fff;
   margin-top: 10px;
   border: none;
-  padding: 10px 18px;
-  font-size: 16px;
-  line-height: 1.3;
-  border-radius: 4px;
-  white-space: normal;
-  text-align: center;
 }
 
 .delete-btn-modal:hover {
@@ -363,11 +352,29 @@ td i {
   background: #bbb;
 }
 
+/* Para hacer el botón .delete-btn-modal un poco más pequeño */
+.delete-btn-modal {
+  background: #e74c3c;
+  color: #fff;
+  margin-top: 10px;
+  border: none;
+  padding: 10px 18px;  /* Reducido */
+  font-size: 16px;      /* Tamaño de fuente más pequeño */
+  line-height: 1.3;     /* Ligero ajuste en el espacio vertical */
+  border-radius: 4px;   /* Bordes un poco menos redondeados */
+  white-space: normal;  /* Permite saltos de línea automáticos */
+  text-align: center;   /* Centra el texto */
+}
+
+.delete-btn-modal:hover {
+  background: #c0392b;
+}
+
 /* Botones Crear Receta y Actualizar Receta centrados */
 .btn, .create-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; /* Asegura uso de flexbox para alinear */
+  align-items: center; /* Centrado vertical */
+  justify-content: center; /* Centrado horizontal */
   gap: 8px;
   padding: 10px 20px;
   background: linear-gradient(45deg, #f39c12, #2c3e50);
@@ -379,7 +386,7 @@ td i {
   border: none;
   cursor: pointer;
   transition: background 0.3s ease;
-  text-align: center;
+  text-align: center; /* Asegura que el texto se centre si se rompe línea */
 }
 
 .btn:hover, .create-btn:hover {
@@ -389,52 +396,3 @@ td i {
 .btn i {
   font-size: 16px;
 }
-
-
-/* Paleta personalizada:
-   - Degradado principal: de naranja (#f39c12) a gris oscuro (#2c3e50)
-   - Acento extra: blanco (#ffffff)
-*/
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body {
-  overflow-x: hidden;
-  background: #f5f5f5;
-}
-
-.container {
-  position: relative;
-  width: 100%;
-}
-
-/* ... el resto de estilos previos ... */
-
-/* Espaciado actualizado para el formulario */
-.modal-content form label {
-  margin-bottom: 8px;
-  color: #2c3e50;
-  font-weight: 500;
-  display: block;
-}
-
-.modal-content form input[type="text"],
-.modal-content form input[type="file"],
-.modal-content form input[type="email"],
-.modal-content form input[type="number"],
-.modal-content form textarea,
-.modal-content form select {
-  margin-bottom: 20px;
-  padding: 12px;        /* un poco más grande */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;      /* aumenta tamaño de fuente */
-  width: 100%;
-}
-
-/* Botones y demás permanecen iguales */
